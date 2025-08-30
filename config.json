@@ -1,0 +1,14 @@
+{
+  "tts_engine": "gtts",
+  "gtts": {
+    "vi_lang": "vi",
+    "en_lang": "en"
+  },
+  "pyttsx3": {
+    "vi_voice_id": "",
+    "en_voice_id": "",
+    "rate": 175,
+    "volume": 1.0
+  },
+  "audio_format": "auto"
+}
