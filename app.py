@@ -47,6 +47,9 @@ class TrainerApp:
         # Nút quản lý câu
         self.btn_manage = tk.Button(lesson_frame, text="⚙ Manage Sentences", command=self.open_manage_window)
         self.btn_manage.pack(side=tk.LEFT, padx=10)
+        
+        self.btn_manage_lesson = tk.Button(lesson_frame, text="⚙ Manage Lessons", command=self.open_manage_lesson_window)
+        self.btn_manage_lesson.pack(side=tk.LEFT, padx=10)
 
         # Label hiển thị VI/EN
         self.vi_label = tk.Label(master, text="", font=("Arial", 14), wraplength=700)
@@ -282,6 +285,56 @@ class TrainerApp:
         tk.Button(frame_buttons, text="Update", command=update).pack(side=tk.LEFT, padx=5)
         tk.Button(frame_buttons, text="Delete", command=delete).pack(side=tk.LEFT, padx=5)
 
+    def open_manage_lesson_window(self):
+        win = tk.Toplevel(self.master)
+        win.title("Manage Lessons")
+        win.geometry("300x200")
+
+        frame = tk.Frame(win, padx=10, pady=10)
+        frame.pack(fill=tk.BOTH, expand=True)
+
+        lessons = get_lessons()
+        lesson_listbox = tk.Listbox(frame)
+        lesson_listbox.pack(fill=tk.BOTH, expand=True)
+
+        for lesson in lessons:
+            lesson_listbox.insert(tk.END, lesson)
+
+        def add_lesson():
+            new_lesson = simpledialog.askinteger("Add Lesson", "Enter new lesson number:")
+            if new_lesson and new_lesson not in lessons:
+                lessons.append(new_lesson)
+                lessons.sort()
+                lesson_listbox.insert(tk.END, new_lesson)
+                self.lesson_menu['menu'].add_command(label=new_lesson, command=tk._setit(self.lesson_var, new_lesson, self.set_lesson))
+            else:
+                messagebox.showerror("Error", "Lesson already exists or invalid input.")
+
+        def delete_lesson():
+            selected = lesson_listbox.curselection()
+            if not selected:
+                messagebox.showerror("Error", "Select a lesson to delete!")
+                return
+            lesson_to_delete = lesson_listbox.get(selected[0])
+            if messagebox.askyesno("Confirm", f"Are you sure you want to delete lesson {lesson_to_delete}? This will also delete all its sentences."):
+                # Delete all sentences in this lesson
+                rows = get_sentences_by_lesson(lesson_to_delete)
+                for row in rows:
+                    delete_sentence(row["id"])
+                lessons.remove(lesson_to_delete)
+                lesson_listbox.delete(selected[0])
+                self.lesson_menu['menu'].delete(lesson_to_delete)
+                if self.current_lesson == lesson_to_delete:
+                    self.current_lesson = None
+                    self.vi_label.config(text="")
+                    self.en_label.config(text="")
+                    self.tree.delete(*self.tree.get_children())
+                    self.queue = []
+
+        btn_frame = tk.Frame(win)
+        btn_frame.pack(pady=10)
+        tk.Button(btn_frame, text="Add Lesson", command=add_lesson).pack(side=tk.LEFT, padx=5)
+        tk.Button(btn_frame, text="Delete Lesson", command=delete_lesson).pack(side=tk.LEFT, padx=5)
 
 if __name__ == "__main__":
     ensure_db_seeded()
