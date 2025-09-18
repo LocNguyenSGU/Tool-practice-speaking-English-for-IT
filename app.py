@@ -173,7 +173,7 @@ class TrainerApp:
         self.vi_label.config(text=f"VI: {self.vi}")
         self.en_label.config(text="")
 
-        Thread(target=self._play_vi_audio_thread).start()
+        # Thread(target=self._play_vi_audio_thread).start()
 
     def _play_vi_audio_thread(self):
         if not self.vi_audio or not Path(self.vi_audio).exists():
