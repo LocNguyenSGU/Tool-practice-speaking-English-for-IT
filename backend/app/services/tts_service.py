@@ -1,7 +1,13 @@
 import os
 from pathlib import Path
 from gtts import gTTS
-import pyttsx3
+
+try:
+    import pyttsx3
+    PYTTSX3_AVAILABLE = True
+except ImportError:
+    PYTTSX3_AVAILABLE = False
+
 from app.config import settings
 from app.core.exceptions import BadRequestException
 
@@ -44,6 +50,9 @@ class TTSService:
     
     def _generate_pyttsx3(self, text: str, language: str, file_path: str):
         """Generate audio using pyttsx3 (offline)."""
+        if not PYTTSX3_AVAILABLE:
+            raise BadRequestException("pyttsx3 not available, install it with: pip install pyttsx3")
+        
         engine = pyttsx3.init()
         
         # Set voice based on language

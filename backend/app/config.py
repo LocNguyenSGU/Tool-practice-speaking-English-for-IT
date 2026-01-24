@@ -1,16 +1,16 @@
 from typing import List
 from pydantic_settings import BaseSettings
-from pydantic import validator
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
     # Database
-    database_url: str
+    database_url: str = "sqlite:///./test.db"  # Default for testing
     db_pool_size: int = 20
     db_max_overflow: int = 10
     
     # JWT
-    secret_key: str
+    secret_key: str = "development-secret-key-change-in-production-min-32-chars"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
@@ -21,9 +21,10 @@ class Settings(BaseSettings):
     max_audio_size_mb: int = 5
     
     # CORS
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: List[str] = ["http://localhost:3000"]
     
-    @validator("cors_origins", pre=True)
+    @field_validator("cors_origins", mode="before")
+    @classmethod
     def parse_cors_origins(cls, v):
         if isinstance(v, str):
             return [origin.strip() for origin in v.split(",")]
