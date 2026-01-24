@@ -10,7 +10,7 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.core.database import SessionLocal
+from app.core.database import SessionLocal, Base, engine
 from app.models.lesson import Lesson
 from app.models.sentence import Sentence
 from app.models.user import User
@@ -19,6 +19,9 @@ from app.core.security import get_password_hash
 
 def seed_database():
     """Seed database with initial data"""
+    # Create tables first
+    Base.metadata.create_all(bind=engine)
+    
     db = SessionLocal()
     
     try:
@@ -30,13 +33,12 @@ def seed_database():
             admin = User(
                 email="admin@example.com",
                 username="admin",
-                full_name="Administrator",
-                password_hash=get_password_hash("admin123"),
+                hashed_password=get_password_hash("changeme123"),
                 is_admin=True,
                 is_active=True,
             )
             db.add(admin)
-            print("✅ Admin user created (email: admin@example.com, password: admin123)")
+            print("✅ Admin user created (email: admin@example.com, password: changeme123)")
         else:
             print("ℹ️  Admin user already exists")
         

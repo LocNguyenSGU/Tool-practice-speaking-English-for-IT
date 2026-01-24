@@ -21,9 +21,9 @@ class Settings(BaseSettings):
     max_audio_size_mb: int = 5
     
     # CORS
-    cors_origins: List[str] = ["http://localhost:3000"]
+    cors_origins: str = "http://localhost:3000"
     
-    @field_validator("cors_origins", mode="before")
+    @field_validator("cors_origins", mode="after")
     @classmethod
     def parse_cors_origins(cls, v):
         if isinstance(v, str):
