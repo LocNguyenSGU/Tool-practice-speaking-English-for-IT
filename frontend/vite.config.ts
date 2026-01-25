@@ -10,4 +10,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    // Enable SPA fallback for client-side routing
+    // This makes all routes serve index.html in development
+    historyApiFallback: true,
+  },
 })

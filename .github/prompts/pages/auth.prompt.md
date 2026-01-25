@@ -17,7 +17,7 @@
 4. Form validation real-time (email format, password strength)
 5. "Remember me" checkbox cho login
 6. Link "Forgot password?" (placeholder, chưa implement backend)
-7. Social login placeholders (Google, Facebook - future)
+7. Social login placeholders (Google, Facebook, Github - future)
 8. Guest mode button: "Tiếp tục không đăng ký" → /lessons
 
 ## API Endpoints

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   BookOpen, 
   Zap, 
@@ -56,19 +57,19 @@ export default function Landing() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <button className="group bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-indigo-400">
+            <Link to="/auth" className="group bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-indigo-400">
               <span className="flex items-center gap-3 justify-center">
                 Bắt đầu luyện tập
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
               </span>
-            </button>
+            </Link>
             
-            <button className="group bg-white text-indigo-600 px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-indigo-600 hover:bg-indigo-50">
+            <Link to="/lessons" className="group bg-white text-indigo-600 px-10 py-5 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-indigo-600 hover:bg-indigo-50">
               <span className="flex items-center gap-3 justify-center">
                 Thử ngay - Không cần đăng ký
                 <Zap className="w-6 h-6 text-green-500 group-hover:rotate-12 transition-transform" />
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Quick Stats */}
@@ -311,19 +312,19 @@ export default function Landing() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
-            <button className="group bg-white text-indigo-600 px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-white/30 transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-white">
+            <Link to="/auth" className="group bg-white text-indigo-600 px-12 py-6 rounded-2xl font-bold text-xl hover:bg-indigo-50 transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-white shadow-lg">
               <span className="flex items-center gap-3 justify-center">
                 Đăng ký miễn phí
                 <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
               </span>
-            </button>
+            </Link>
             
-            <button className="group bg-white/20 backdrop-blur-sm border-2 border-white text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-indigo-600 transition-all duration-300 hover:scale-105 cursor-pointer shadow-xl">
+            <Link to="/lessons" className="group bg-white/20 backdrop-blur-sm border-2 border-white text-white px-12 py-6 rounded-2xl font-bold text-xl hover:bg-white hover:text-indigo-600 transition-all duration-300 hover:scale-105 cursor-pointer shadow-xl">
               <span className="flex items-center gap-3 justify-center">
                 Thử ngay
                 <Zap className="w-6 h-6 group-hover:rotate-12 transition-transform" />
               </span>
-            </button>
+            </Link>
           </div>
 
           <p className="text-white/80 text-sm">
