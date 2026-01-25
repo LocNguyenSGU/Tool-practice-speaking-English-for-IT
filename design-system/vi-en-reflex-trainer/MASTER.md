@@ -7,7 +7,7 @@
 ---
 
 **Project:** Vi-En Reflex Trainer
-**Generated:** 2026-01-25 12:44:25
+**Generated:** 2026-01-25 17:30:36
 **Category:** Language Learning App
 
 ---
@@ -163,10 +163,11 @@
 
 ### Page Pattern
 
-**Pattern Name:** Feature-Rich + Social Proof
+**Pattern Name:** Portfolio Grid
 
-- **CTA Placement:** Above fold
-- **Section Order:** Hero > Features > CTA
+- **Conversion Strategy:**  hover overlay info,  lightbox view, Visuals first. Filter by category. Fast loading essential.
+- **CTA Placement:** Project Card Hover + Footer Contact
+- **Section Order:** 1. Hero (Name/Role), 2. Project Grid (Masonry), 3. About/Philosophy, 4. Contact
 
 ---
 

@@ -33,7 +33,8 @@ frontend/
 │   │   ├── Landing.tsx       # Homepage (/)
 │   │   ├── Auth.tsx          # Login/Register (/auth)
 │   │   ├── ForgotPassword.tsx  # Forgot password flow
-│   │   └── ResetPassword.tsx   # Reset password with token
+│   │   ├── ResetPassword.tsx   # Reset password with token
+│   │   └── Lessons.tsx       # Lessons list (/lessons)
 │   │
 │   ├── utils/                # Utility functions
 │   │   └── auth.ts           # Token management, localStorage helpers
@@ -54,7 +55,8 @@ frontend/
 | `/auth` | `Auth` | ✅ Done | Login/Register toggle form |
 | `/forgot-password` | `ForgotPassword` | ✅ Done | Request password reset link |
 | `/reset-password` | `ResetPassword` | ✅ Done | Reset password with token from email |
-| `/lessons` | Placeholder | 🚧 TODO | Lessons list page |
+| `/lessons` | `Lessons` | ✅ Done | Lessons list with search, filter, pagination |
+| `/practice` | Placeholder | 🚧 TODO | Practice mode for lesson sentences |
 
 ## 🔐 Auth Flow
 
@@ -149,8 +151,9 @@ server: {
 
 ## 🎯 Next Steps (TODO)
 
-- [ ] Create Lessons page component
-- [ ] Create Practice page component
+- [x] Create Lessons page component
+- [ ] Create Practice page component  
+- [ ] Create Lesson Detail page
 - [ ] Add user dashboard
 - [ ] Implement protected routes (auth guard)
 - [ ] Add toast notifications (consider react-hot-toast)

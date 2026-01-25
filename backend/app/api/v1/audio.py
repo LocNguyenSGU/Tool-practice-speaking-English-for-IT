@@ -43,7 +43,8 @@ async def get_audio(
     text = sentence.vi_text if language == "vi" else sentence.en_text
     
     # Generate audio (or get cached)
-    audio_path = TTSService.generate_audio(sentence_id, text, language)
+    tts = TTSService()
+    audio_path = tts.generate_audio(text, language, sentence_id)
     
     # Check if AudioFile record exists, create if not
     audio_file = (
