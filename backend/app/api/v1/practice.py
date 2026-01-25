@@ -133,3 +133,34 @@ async def get_practice_stats(
         total_practice_count=int(total_practice_count),
         recent_practiced_count=recent_count,
     )
+
+
+@router.get("/practice/practiced-ids")
+async def get_practiced_sentence_ids(
+    lesson_id: int = Query(..., description="Lesson ID to get practiced sentences for"),
+    user=Depends(get_optional_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Get list of sentence IDs that user has practiced in a lesson
+    
+    Returns:
+    - **sentence_ids**: List of practiced sentence IDs
+    
+    For authenticated users: Returns actual practiced IDs
+    For guests: Returns empty list
+    """
+    from app.models.progress import UserProgress
+    
+    if not user:
+        return {"sentence_ids": []}
+    
+    # Get practiced sentence IDs for this lesson
+    practiced = db.query(UserProgress.sentence_id).filter(
+        UserProgress.user_id == user.id,
+        UserProgress.sentence_id.in_(
+            db.query(Sentence.id).filter(Sentence.lesson_id == lesson_id)
+        )
+    ).distinct().all()
+    
+    return {"sentence_ids": [p[0] for p in practiced]}

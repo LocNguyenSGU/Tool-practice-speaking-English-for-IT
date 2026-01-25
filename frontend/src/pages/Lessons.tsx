@@ -110,8 +110,9 @@ export default function Lessons() {
             sentence_count: countData.sentences_count || 0,
           };
 
-          // Fetch progress if authenticated
+          // Fetch progress
           if (isAuthenticated) {
+            // Authenticated: get from server
             try {
               const token = getAccessToken();
               const progressResponse = await fetch(
@@ -132,21 +133,38 @@ export default function Lessons() {
                     : 0,
                 };
               }
-          } catch (_err) {
-            // Ignore progress fetch errors
-            console.warn('Failed to fetch progress for lesson', lesson.id);
+            } catch (_err) {
+              console.warn('Failed to fetch progress for lesson', lesson.id);
+            }
+          } else {
+            // Guest: get from localStorage
+            const storageKey = `practiced_${lesson.id}`;
+            const stored = localStorage.getItem(storageKey);
+            if (stored) {
+              try {
+                const practicedIds = JSON.parse(stored);
+                const practicedCount = Array.isArray(practicedIds) ? practicedIds.length : 0;
+                stats.progress = {
+                  total_practiced: practicedCount,
+                  progress_percentage: stats.sentence_count > 0
+                    ? Math.round((practicedCount / stats.sentence_count) * 100)
+                    : 0,
+                };
+              } catch (_err) {
+                console.warn('Failed to parse localStorage for lesson', lesson.id);
+              }
+            }
           }
+
+          statsMap.set(lesson.id, stats);
+        } catch (_err) {
+          console.warn('Failed to fetch stats for lesson', lesson.id);
         }
+      })
+    );
 
-        statsMap.set(lesson.id, stats);
-      } catch (_err) {
-        console.warn('Failed to fetch stats for lesson', lesson.id);
-      }
-    })
-  );
-
-  setLessonsStats(statsMap);
-};
+    setLessonsStats(statsMap);
+  };
 
 const handleSearch = (e: React.FormEvent) => {
   e.preventDefault();
@@ -350,14 +368,59 @@ const renderPageNumbers = () => {
                     {/* Background decoration */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full -translate-y-16 translate-x-16 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
                     
-                    {/* Badge */}
-                    <div className="relative mb-4">
+                    {/* Badge & Circular Progress */}
+                    <div className="relative mb-4 flex items-center justify-between">
                       <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-indigo-500 to-indigo-400 text-white text-sm rounded-full font-semibold shadow-md">
                         <Sparkles className="w-4 h-4" strokeWidth={2.5} />
                         <span style={{ fontFamily: "'Comic Neue', cursive" }}>
                           Bài {lesson.order_index}
                         </span>
                       </div>
+                      
+                      {/* Circular Progress */}
+                      {progress && (
+                        <div className="relative w-12 h-12">
+                          <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                            {/* Background circle */}
+                            <circle
+                              cx="18"
+                              cy="18"
+                              r="15.5"
+                              fill="none"
+                              stroke="#E5E7EB"
+                              strokeWidth="3"
+                            />
+                            {/* Progress circle */}
+                            <circle
+                              cx="18"
+                              cy="18"
+                              r="15.5"
+                              fill="none"
+                              stroke="url(#gradient-${lesson.id})"
+                              strokeWidth="3"
+                              strokeDasharray={`${progress.progress_percentage}, 100`}
+                              strokeLinecap="round"
+                              className="transition-all duration-500"
+                            />
+                            {/* Gradient definition */}
+                            <defs>
+                              <linearGradient id={`gradient-${lesson.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#22C55E" />
+                                <stop offset="100%" stopColor="#10B981" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                          {/* Percentage text */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span 
+                              className="text-xs font-bold text-gray-700"
+                              style={{ fontFamily: "'Baloo 2', cursive" }}
+                            >
+                              {progress.progress_percentage}%
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Content */}

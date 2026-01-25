@@ -62,17 +62,20 @@ class PracticeService:
             total_in_lesson = db.query(Sentence).filter(
                 Sentence.lesson_id == lesson_id
             ).count()
-            practiced_count = db.query(UserProgress).filter(
+            
+            # Count unique sentences practiced in this lesson
+            practiced_sentence_ids = db.query(UserProgress.sentence_id).filter(
                 UserProgress.user_id == user.id,
                 UserProgress.sentence_id.in_(
                     db.query(Sentence.id).filter(Sentence.lesson_id == lesson_id)
                 )
-            ).count()
+            ).distinct().all()
+            practiced_count = len(practiced_sentence_ids)
             
             progress = {
-                "practiced_count": practice_counts[sentence.id],
+                "practiced_count": practiced_count,
                 "total_in_lesson": total_in_lesson,
-                "completion_percentage": round((practiced_count / total_in_lesson) * 100, 2) if total_in_lesson > 0 else 0
+                "percentage": round((practiced_count / total_in_lesson) * 100, 2) if total_in_lesson > 0 else 0
             }
             
             return sentence, progress
@@ -83,7 +86,19 @@ class PracticeService:
                 raise NotFoundException("No sentences found in this lesson")
             
             sentence = random.choice(sentences)
-            return sentence, None
+            
+            # Get total count for guest progress bar
+            total_in_lesson = db.query(Sentence).filter(
+                Sentence.lesson_id == lesson_id
+            ).count()
+            
+            progress = {
+                "practiced_count": 0,
+                "total_in_lesson": total_in_lesson,
+                "percentage": 0
+            }
+            
+            return sentence, progress
     
     @staticmethod
     def record_practice(db: Session, user: User, sentence_id: int):

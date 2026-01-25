@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Mail, User, Lock, ArrowRight, Sparkles } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 
 type AuthMode = 'login' | 'register';
 
@@ -90,15 +91,32 @@ export default function Auth() {
       }
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    // Filter out undefined values
+    const filteredErrors = Object.fromEntries(
+      Object.entries(newErrors).filter(([_, v]) => v !== undefined)
+    ) as FormErrors;
+
+    setErrors(filteredErrors);
+    
+    const hasErrors = Object.keys(filteredErrors).length > 0;
+    console.log('Validation errors:', filteredErrors);
+    console.log('Has errors:', hasErrors);
+    
+    return !hasErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    console.log('Form submitted. Mode:', mode);
+    console.log('Form data:', formData);
+    
+    if (!validateForm()) {
+      console.log('Validation failed. Errors:', errors);
+      return;
+    }
 
+    console.log('Validation passed. Proceeding with API call...');
     setIsLoading(true);
 
     try {
@@ -119,16 +137,19 @@ export default function Auth() {
           throw new Error(data.detail || 'Đăng ký thất bại');
         }
 
-        // Auto-login after registration
+        // Auto-switch to login after registration
+        toast.success('Đăng ký thành công! Vui lòng đăng nhập.', {
+          duration: 3000,
+          position: 'top-center',
+        });
         setMode('login');
-        alert('Đăng ký thành công! Vui lòng đăng nhập.');
       } else {
         // Login API call
         const response = await fetch('http://localhost:8000/api/v1/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            identifier: formData.email || formData.username,
+            email: formData.email || formData.username,
             password: formData.password,
           }),
         });
@@ -148,7 +169,10 @@ export default function Auth() {
         window.location.href = '/lessons';
       }
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Có lỗi xảy ra');
+      toast.error(error instanceof Error ? error.message : 'Có lỗi xảy ra', {
+        duration: 4000,
+        position: 'top-center',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -168,6 +192,7 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center p-4 py-8 overflow-y-auto">
+      <Toaster />
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-indigo-100/20 to-transparent rounded-full blur-3xl" />
