@@ -65,7 +65,7 @@ async def not_found_exception_handler(request: Request, exc: NotFoundException):
     """Handle 404 Not Found"""
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
-        content={"error": "Not Found", "message": exc.message},
+        content={"error": "Not Found", "message": exc.detail},
     )
 
 
@@ -74,7 +74,7 @@ async def unauthorized_exception_handler(request: Request, exc: UnauthorizedExce
     """Handle 401 Unauthorized"""
     return JSONResponse(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        content={"error": "Unauthorized", "message": exc.message},
+        content={"error": "Unauthorized", "message": exc.detail},
         headers={"WWW-Authenticate": "Bearer"},
     )
 
@@ -84,7 +84,7 @@ async def forbidden_exception_handler(request: Request, exc: ForbiddenException)
     """Handle 403 Forbidden"""
     return JSONResponse(
         status_code=status.HTTP_403_FORBIDDEN,
-        content={"error": "Forbidden", "message": exc.message},
+        content={"error": "Forbidden", "message": exc.detail},
     )
 
 
@@ -93,7 +93,7 @@ async def bad_request_exception_handler(request: Request, exc: BadRequestExcepti
     """Handle 400 Bad Request"""
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
-        content={"error": "Bad Request", "message": exc.message},
+        content={"error": "Bad Request", "message": exc.detail},
     )
 
 
@@ -102,7 +102,7 @@ async def conflict_exception_handler(request: Request, exc: ConflictException):
     """Handle 409 Conflict"""
     return JSONResponse(
         status_code=status.HTTP_409_CONFLICT,
-        content={"error": "Conflict", "message": exc.message},
+        content={"error": "Conflict", "message": exc.detail},
     )
 
 

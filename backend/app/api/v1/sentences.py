@@ -17,7 +17,7 @@ from app.schemas.sentence import (
     SentenceWithAudio,
     BulkSentenceCreate,
 )
-from app.schemas.common import PaginatedResponse, PaginationParams
+from app.schemas.common import PaginatedResponse, PaginationParams, PaginationMeta
 from app.dependencies import get_current_admin, get_optional_user
 
 router = APIRouter()
@@ -61,33 +61,40 @@ async def get_sentences(
     total = query.count()
     
     # Pagination
-    offset = (pagination.page - 1) * pagination.page_size
-    items = query.offset(offset).limit(pagination.page_size).all()
+    offset = (pagination.page - 1) * pagination.limit
+    items = query.offset(offset).limit(pagination.limit).all()
     
     # Convert to SentenceWithAudio
-    from app.services.tts_service import TTSService
     result = []
     for sentence in items:
-        audio_vi = None
-        audio_en = None
-        
-        # Check if audio files exist
-        for audio_file in sentence.audio_files:
-            path = TTSService.get_audio_path(sentence.id, audio_file.language)
-            if audio_file.language == "vi":
-                audio_vi = f"/api/v1/audio/{sentence.id}/vi"
-            elif audio_file.language == "en":
-                audio_en = f"/api/v1/audio/{sentence.id}/en"
-        
         result.append(
             SentenceWithAudio(
-                **sentence.__dict__,
-                audio_vi=audio_vi,
-                audio_en=audio_en,
+                id=sentence.id,
+                lesson_id=sentence.lesson_id,
+                vi_text=sentence.vi_text,
+                en_text=sentence.en_text,
+                order_index=sentence.order_index,
+                created_at=sentence.created_at,
+                updated_at=sentence.updated_at,
+                vi_audio_url=f"/api/v1/audio/{sentence.id}/vi",
+                en_audio_url=f"/api/v1/audio/{sentence.id}/en",
             )
         )
     
-    return PaginatedResponse.create(result, total, pagination.page, pagination.page_size)
+    # Calculate pagination meta
+    total_pages = (total + pagination.limit - 1) // pagination.limit
+    
+    return PaginatedResponse(
+        items=result,
+        pagination=PaginationMeta(
+            page=pagination.page,
+            limit=pagination.limit,
+            total_items=total,
+            total_pages=total_pages,
+            has_next=pagination.page < total_pages,
+            has_prev=pagination.page > 1
+        )
+    )
 
 
 @router.get("/sentences/{sentence_id}", response_model=SentenceWithAudio)
@@ -117,9 +124,15 @@ async def get_sentence(
             audio_en = f"/api/v1/audio/{sentence.id}/en"
     
     return SentenceWithAudio(
-        **sentence.__dict__,
-        audio_vi=audio_vi,
-        audio_en=audio_en,
+        id=sentence.id,
+        lesson_id=sentence.lesson_id,
+        vi_text=sentence.vi_text,
+        en_text=sentence.en_text,
+        order_index=sentence.order_index,
+        created_at=sentence.created_at,
+        updated_at=sentence.updated_at,
+        vi_audio_url=f"/api/v1/audio/{sentence.id}/vi",
+        en_audio_url=f"/api/v1/audio/{sentence.id}/en",
     )
 
 
@@ -174,6 +187,12 @@ async def bulk_create_sentences(
     - **lesson_id**: Lesson ID (required)
     - **sentences**: List of sentences with vi_text and en_text
     """
+    from app.core.exceptions import BadRequestException
+    
+    # Validate sentences list
+    if not bulk_data.sentences:
+        raise BadRequestException("Sentences list cannot be empty")
+    
     # Check lesson exists
     lesson = db.query(Lesson).filter(Lesson.id == bulk_data.lesson_id).first()
     if not lesson:
@@ -191,8 +210,8 @@ async def bulk_create_sentences(
     for idx, sentence_data in enumerate(bulk_data.sentences):
         sentence = Sentence(
             lesson_id=bulk_data.lesson_id,
-            vi_text=sentence_data.vi_text,
-            en_text=sentence_data.en_text,
+            vi_text=sentence_data.get("vi", ""),
+            en_text=sentence_data.get("en", ""),
             order_index=max_order + idx + 1,
         )
         db.add(sentence)
@@ -232,7 +251,8 @@ async def update_sentence(
     # Delete cached audio files if text changed
     if "vi_text" in update_data or "en_text" in update_data:
         from app.services.tts_service import TTSService
-        TTSService.delete_audio(sentence_id)
+        tts = TTSService()
+        tts.delete_audio(sentence_id)
     
     return sentence
 
@@ -256,7 +276,8 @@ async def delete_sentence(
     
     # Delete audio files
     from app.services.tts_service import TTSService
-    TTSService.delete_audio(sentence_id)
+    tts = TTSService()
+    tts.delete_audio(sentence_id)
     
     db.delete(sentence)
     db.commit()

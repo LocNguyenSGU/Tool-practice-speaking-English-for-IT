@@ -91,16 +91,17 @@ if [ ! -f ".env" ]; then
         read -p "   Database host (localhost): " DB_HOST
         DB_HOST=${DB_HOST:-localhost}
         
-        read -p "   Database port (5432): " DB_PORT
-        DB_PORT=${DB_PORT:-5432}
+        read -p "   Database port (5433): " DB_PORT
+        DB_PORT=${DB_PORT:-5433}
         
-        read -p "   Database name (reflex_trainer): " DB_NAME
-        DB_NAME=${DB_NAME:-reflex_trainer}
+        read -p "   Database name (vi_en_trainer): " DB_NAME
+        DB_NAME=${DB_NAME:-vi_en_trainer}
         
         read -p "   Database user (postgres): " DB_USER
         DB_USER=${DB_USER:-postgres}
         
-        read -sp "   Database password: " DB_PASSWORD
+        read -sp "   Database password (mysecretpassword): " DB_PASSWORD
+        DB_PASSWORD=${DB_PASSWORD:-mysecretpassword}
         echo ""
         
         # Update .env

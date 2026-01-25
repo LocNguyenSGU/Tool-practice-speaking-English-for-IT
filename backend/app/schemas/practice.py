@@ -20,10 +20,8 @@ class PracticeProgressItem(BaseModel):
 
 class PracticeStats(BaseModel):
     total_practiced: int
-    unique_sentences: int
-    current_streak_days: int
-    lessons_completed: list[int]
-    recent_activity: list[dict]  # [{"date": "2026-01-24", "count": 20}]
+    total_practice_count: int
+    recent_practiced_count: int
 
 
 class NextSentenceResponse(BaseModel):

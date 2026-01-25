@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import Depends, Header
 from sqlalchemy.orm import Session
+from jose import JWTError
 from app.core.database import get_db
 from app.core.security import decode_token
 from app.core.exceptions import UnauthorizedException, ForbiddenException
@@ -24,7 +25,7 @@ def get_token_data(authorization: Optional[str] = Header(None)) -> Optional[Toke
             email=payload.get("sub"),
             is_admin=payload.get("is_admin", False),
         )
-    except (ValueError, KeyError):
+    except (ValueError, KeyError, JWTError):
         raise UnauthorizedException("Invalid or expired token")
 
 

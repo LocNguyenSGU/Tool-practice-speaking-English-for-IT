@@ -38,12 +38,12 @@ async def register(request: RegisterRequest, db: Session = Depends(get_db)):
 @router.post("/auth/login", response_model=TokenResponse)
 async def login(request: LoginRequest, db: Session = Depends(get_db)):
     """
-    Login with email/username and password
+    Login with email and password
     
-    - **identifier**: Email or username
+    - **email**: User email address
     - **password**: User password
     """
-    user = AuthService.authenticate_user(db, request.identifier, request.password)
+    user = AuthService.authenticate_user(db, request)
     tokens = AuthService.create_tokens(user)
     return tokens
 
@@ -56,14 +56,22 @@ async def refresh_token(request: TokenRefreshRequest, db: Session = Depends(get_
     - **refresh_token**: Valid refresh token
     """
     from app.models.user import User
+    from jose import JWTError
     
     # Decode refresh token
-    token_data = decode_token(request.refresh_token)
-    if not token_data or token_data.get("type") != "refresh":
-        raise UnauthorizedException("Invalid refresh token")
+    try:
+        token_data = decode_token(request.refresh_token)
+        if not token_data or token_data.get("type") != "refresh":
+            raise UnauthorizedException("Invalid refresh token")
+    except JWTError:
+        raise UnauthorizedException("Invalid or expired refresh token")
     
-    # Get user
-    user = db.query(User).filter(User.id == token_data["sub"]).first()
+    # Get user - token sub is email
+    user_email = token_data.get("sub")
+    if not user_email:
+        raise UnauthorizedException("Invalid token data")
+    
+    user = db.query(User).filter(User.email == user_email).first()
     if not user or not user.is_active:
         raise UnauthorizedException("User not found or inactive")
     

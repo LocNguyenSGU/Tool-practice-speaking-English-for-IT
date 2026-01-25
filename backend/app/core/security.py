@@ -20,7 +20,7 @@ def get_password_hash(password: str) -> str:
 def create_access_token(data: Dict, expires_minutes: Optional[int] = None) -> str:
     """Create JWT access token."""
     to_encode = data.copy()
-    if expires_minutes:
+    if expires_minutes is not None:
         expire = datetime.utcnow() + timedelta(minutes=expires_minutes)
     else:
         expire = datetime.utcnow() + timedelta(minutes=settings.access_token_expire_minutes)
@@ -41,8 +41,5 @@ def create_refresh_token(data: Dict) -> str:
 
 def decode_token(token: str) -> Dict:
     """Decode JWT token."""
-    try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
-        return payload
-    except JWTError:
-        raise ValueError("Invalid token")
+    payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+    return payload

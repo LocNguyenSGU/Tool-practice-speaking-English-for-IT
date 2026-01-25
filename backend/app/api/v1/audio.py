@@ -53,10 +53,15 @@ async def get_audio(
     )
     
     if not audio_file:
+        # Get file size
+        import os
+        file_size = os.path.getsize(audio_path) if os.path.exists(audio_path) else 0
+        
         audio_file = AudioFile(
             sentence_id=sentence_id,
             language=language,
             file_path=audio_path,
+            file_size=file_size,
         )
         db.add(audio_file)
         db.commit()

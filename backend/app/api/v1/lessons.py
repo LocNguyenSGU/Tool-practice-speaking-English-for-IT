@@ -11,7 +11,7 @@ from app.core.exceptions import NotFoundException, BadRequestException
 from app.models.lesson import Lesson
 from app.models.sentence import Sentence
 from app.schemas.lesson import LessonCreate, LessonUpdate, LessonInDB
-from app.schemas.common import PaginatedResponse, PaginationParams
+from app.schemas.common import PaginatedResponse, PaginationParams, PaginationMeta
 from app.dependencies import get_current_admin, get_optional_user
 
 router = APIRouter()
@@ -49,10 +49,23 @@ async def get_lessons(
     total = query.count()
     
     # Pagination
-    offset = (pagination.page - 1) * pagination.page_size
-    items = query.offset(offset).limit(pagination.page_size).all()
+    offset = (pagination.page - 1) * pagination.limit
+    items = query.offset(offset).limit(pagination.limit).all()
     
-    return PaginatedResponse.create(items, total, pagination.page, pagination.page_size)
+    # Calculate pagination meta
+    total_pages = (total + pagination.limit - 1) // pagination.limit
+    
+    return PaginatedResponse(
+        items=items,
+        pagination=PaginationMeta(
+            page=pagination.page,
+            limit=pagination.limit,
+            total_items=total,
+            total_pages=total_pages,
+            has_next=pagination.page < total_pages,
+            has_prev=pagination.page > 1
+        )
+    )
 
 
 @router.get("/lessons/{lesson_id}", response_model=LessonInDB)

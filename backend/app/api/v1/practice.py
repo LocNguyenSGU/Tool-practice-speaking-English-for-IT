@@ -35,11 +35,25 @@ async def get_next_sentence(
     
     Public endpoint (guest + registered users)
     """
-    result = PracticeService.get_next_sentence(db, user, lesson_id)
-    if not result:
+    sentence, progress = PracticeService.get_next_sentence(db, lesson_id, "smart" if user else "random", user)
+    if not sentence:
         raise NotFoundException("No sentences available for practice")
     
-    return result
+    # Convert to SentenceWithAudio schema
+    from app.schemas.sentence import SentenceWithAudio
+    sentence_data = SentenceWithAudio(
+        id=sentence.id,
+        lesson_id=sentence.lesson_id,
+        vi_text=sentence.vi_text,
+        en_text=sentence.en_text,
+        order_index=sentence.order_index,
+        created_at=sentence.created_at,
+        updated_at=sentence.updated_at,
+        vi_audio_url=f"/api/v1/audio/{sentence.id}/vi",
+        en_audio_url=f"/api/v1/audio/{sentence.id}/en"
+    )
+    
+    return NextSentenceResponse(sentence=sentence_data, progress=progress)
 
 
 @router.post("/practice/record", status_code=status.HTTP_201_CREATED)
@@ -65,7 +79,7 @@ async def record_practice(
     
     # Record practice (only for authenticated users)
     if user:
-        PracticeService.record_practice(db, user.id, request.sentence_id)
+        PracticeService.record_practice(db, user, request.sentence_id)
         message = "Practice recorded successfully"
     else:
         message = "Practice completed (not recorded for guest)"
@@ -90,14 +104,14 @@ async def get_practice_stats(
     Requires: Authentication (guests will get 401)
     """
     from app.core.exceptions import UnauthorizedException
-    from app.models.progress import Progress
+    from app.models.progress import UserProgress
     from sqlalchemy import func
     
     if not user:
         raise UnauthorizedException("Authentication required for statistics")
     
     # Base query
-    query = db.query(Progress).filter(Progress.user_id == user.id)
+    query = db.query(UserProgress).filter(UserProgress.user_id == user.id)
     
     # Lesson filter
     if lesson_id is not None:
@@ -105,13 +119,13 @@ async def get_practice_stats(
     
     # Count stats
     total_practiced = query.count()
-    total_practice_count = query.with_entities(func.sum(Progress.practiced_count)).scalar() or 0
+    total_practice_count = query.with_entities(func.sum(UserProgress.practiced_count)).scalar() or 0
     
     # Recent activity (last 7 days)
     from datetime import datetime, timedelta
     week_ago = datetime.utcnow() - timedelta(days=7)
     recent_count = (
-        query.filter(Progress.last_practiced_at >= week_ago).count()
+        query.filter(UserProgress.last_practiced_at >= week_ago).count()
     )
     
     return PracticeStats(

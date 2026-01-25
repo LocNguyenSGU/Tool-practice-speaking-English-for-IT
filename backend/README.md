@@ -4,23 +4,35 @@ RESTful API backend for Vietnamese-English reflex training application.
 
 ## 🚀 Quick Start
 
+### Option 1: Automated Setup (Recommended)
 ```bash
-# 1. Install dependencies
 cd backend
-python -m venv venv
+chmod +x setup.sh run.sh
+./setup.sh      # Auto-setup everything
+./run.sh        # Start server
+```
+
+### Option 2: Manual Setup
+```bash
+# 1. Create virtual environment
+python3 -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 2. Install dependencies
 pip install -r requirements.txt
 
-# 2. Setup environment
+# 3. Configure environment
 cp .env.example .env
-# Edit .env with your PostgreSQL credentials
+# Edit .env with your settings
 
-# 3. Initialize database
+# 4. Run migrations
 alembic upgrade head
-python scripts/seed_data.py  # Seeds 3 lessons + admin user
 
-# 4. Run server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+# 5. Seed data (optional)
+python scripts/seed_data.py
+
+# 6. Start server
+uvicorn app.main:app --reload
 ```
 
 **Access**:
@@ -28,7 +40,218 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 - Docs: http://localhost:8000/docs
 - Health: http://localhost:8000/health
 
+**Default Admin**:
+- Email: `admin@example.com`
+- Password: `changeme123`
+
 ## 📚 Tech Stack
+
+- **Framework**: FastAPI 0.109.0
+- **Database**: PostgreSQL + SQLAlchemy 2.0.25
+- **Auth**: JWT + bcrypt
+- **TTS**: gTTS (Google Text-to-Speech)
+- **Migrations**: Alembic
+- **Testing**: pytest
+
+## 📁 Project Structure
+
+```
+backend/
+├── app/
+│   ├── main.py              # FastAPI app
+│   ├── config.py            # Settings
+│   ├── api/v1/              # API endpoints
+│   │   ├── auth.py          # Authentication
+│   │   ├── lessons.py       # Lessons CRUD
+│   │   ├── sentences.py     # Sentences CRUD
+│   │   ├── audio.py         # TTS generation
+│   │   └── practice.py      # Practice logic
+│   ├── models/              # Database models
+│   ├── schemas/             # Pydantic schemas
+│   └── services/            # Business logic
+├── migrations/              # Alembic migrations
+├── scripts/                 # Utility scripts
+└── tests/                   # API tests
+```
+
+## 📡 API Endpoints
+
+### Authentication
+- `POST /api/v1/auth/register` - Register new user
+- `POST /api/v1/auth/login` - Login
+- `POST /api/v1/auth/refresh` - Refresh token
+- `GET /api/v1/auth/me` - Get current user
+
+### Lessons
+- `GET /api/v1/lessons` - List lessons (with pagination)
+- `GET /api/v1/lessons/{id}` - Get lesson details
+- `POST /api/v1/lessons` - Create lesson (admin)
+- `PUT /api/v1/lessons/{id}` - Update lesson (admin)
+- `DELETE /api/v1/lessons/{id}` - Delete lesson (admin)
+
+### Sentences
+- `GET /api/v1/sentences` - List sentences
+- `GET /api/v1/sentences/{id}` - Get sentence
+- `POST /api/v1/sentences` - Create sentence (admin)
+- `POST /api/v1/sentences/bulk` - Bulk create (admin)
+- `PUT /api/v1/sentences/{id}` - Update sentence (admin)
+- `DELETE /api/v1/sentences/{id}` - Delete sentence (admin)
+
+### Audio
+- `GET /api/v1/audio/{id}/{lang}` - Get audio file (vi/en)
+- `DELETE /api/v1/audio/{id}` - Clear audio cache
+
+### Practice
+- `GET /api/v1/practice/next` - Get next sentence
+- `POST /api/v1/practice/record` - Record practice session
+- `GET /api/v1/practice/stats` - Get user statistics
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pytest
+
+# With coverage
+pytest --cov=app tests/
+
+# Specific test
+pytest tests/test_api.py::test_login -v
+```
+
+## 🗄️ Database
+
+**Current Setup**:
+- PostgreSQL on Docker (port 5433)
+- Database: `vi_en_trainer`
+- User: `postgres`
+- Password: `mysecretpassword`
+
+**Migrations**:
+```bash
+# Create new migration
+alembic revision --autogenerate -m "description"
+
+# Apply migrations
+alembic upgrade head
+
+# Rollback
+alembic downgrade -1
+```
+
+## 🚀 Production Deployment
+
+### 1. Generate Secret Key
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+### 2. Update .env
+```env
+SECRET_KEY=<generated-key>
+DATABASE_URL=postgresql://user:pass@host:5433/db
+CORS_ORIGINS=https://yourdomain.com
+DEBUG=False
+```
+
+### 3. Run with Gunicorn
+```bash
+./run.sh --prod --workers 4
+```
+
+## 📝 Environment Variables
+
+Key variables in `.env`:
+
+- `DATABASE_URL` - PostgreSQL connection string
+- `SECRET_KEY` - JWT secret (min 32 chars)
+- `ALGORITHM` - JWT algorithm (HS256)
+- `ACCESS_TOKEN_EXPIRE_MINUTES` - Token expiry
+- `CORS_ORIGINS` - Allowed origins (comma-separated)
+- `DEBUG` - Debug mode (True/False)
+
+See `.env.example` for full list.
+
+## 🔧 Useful Commands
+
+```bash
+# Development server
+./run.sh
+
+# Production server
+./run.sh --prod
+
+# Different port
+./run.sh --port 3000
+
+# Database seed
+python scripts/seed_data.py
+
+# Run migrations
+alembic upgrade head
+
+# Run tests
+pytest -v
+```
+
+## 📖 Documentation
+
+Interactive API documentation available at:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+## 🔐 Authentication Flow
+
+1. **Register**: `POST /api/v1/auth/register`
+2. **Login**: `POST /api/v1/auth/login` → Get `access_token`
+3. **Use Token**: Add header `Authorization: Bearer <token>`
+4. **Refresh**: `POST /api/v1/auth/refresh` with `refresh_token`
+
+## 🎯 Key Features
+
+- **Hybrid Mode**: Guest browsing + User progress tracking
+- **Smart Algorithm**: Spaced repetition for practice
+- **Audio Generation**: On-demand TTS with caching
+- **Rate Limiting**: 100 requests/minute
+- **Admin Panel**: Content management via API
+
+## 📦 Dependencies
+
+Main packages:
+- `fastapi` - Web framework
+- `uvicorn` - ASGI server
+- `sqlalchemy` - ORM
+- `psycopg2-binary` - PostgreSQL driver
+- `alembic` - Database migrations
+- `python-jose` - JWT handling
+- `passlib[bcrypt]` - Password hashing
+- `gtts` - Text-to-speech
+- `pytest` - Testing framework
+
+See `requirements.txt` for complete list.
+
+## 🐛 Troubleshooting
+
+**Port already in use**:
+```bash
+kill -9 $(lsof -ti:8000)
+```
+
+**Database connection error**:
+- Check PostgreSQL is running: `docker ps`
+- Verify credentials in `.env`
+- Test connection: `psql -h localhost -p 5433 -U postgres -d vi_en_trainer`
+
+**Migration errors**:
+```bash
+alembic stamp head
+alembic revision --autogenerate -m "fix"
+alembic upgrade head
+```
+
+## 📄 License
+
+MIT License - See LICENSE file for details
 
 - **Framework**: FastAPI 0.109.0 (async, auto-docs)
 - **Database**: PostgreSQL + SQLAlchemy 2.0.25
@@ -206,7 +429,7 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 ### 2. Update .env
 ```env
 SECRET_KEY=<generated-key>
-DATABASE_URL=postgresql://user:pass@host:5432/db
+DATABASE_URL=postgresql://user:pass@host:5433/db
 CORS_ORIGINS=https://yourdomain.com
 ```
 
