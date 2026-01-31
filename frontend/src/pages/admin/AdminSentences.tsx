@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { API_BASE_URL } from '../../config';
 import { Search, Plus, Pencil, Trash2, Upload, Play, Pause } from 'lucide-react';
 import { api } from '../../utils/api';
 import { useToast, ToastContainer } from '../../components/admin/Toast';
@@ -192,7 +193,7 @@ export default function AdminSentences() {
       setPlayingAudio(null);
     } else {
       // Play new audio
-      const audioUrl = `http://localhost:8000/api/v1/audio/${sentenceId}/${lang}`;
+      const audioUrl = `${API_BASE_URL}/api/v1/audio/${sentenceId}/${lang}`;
       if (audioRef.current) {
         audioRef.current.src = audioUrl;
         audioRef.current.play().catch((error) => {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 import { Link } from 'react-router-dom';
 import { 
   Search, 
@@ -73,7 +74,7 @@ export default function Lessons() {
       if (searchQuery) params.append('search', searchQuery);
       if (filterActive !== null) params.append('is_active', filterActive.toString());
 
-      const response = await fetch(`http://localhost:8000/api/v1/lessons?${params}`);
+      const response = await fetch(`${API_BASE_URL}/api/v1/lessons?${params}`);
       
       if (!response.ok) {
         throw new Error('Không thể tải danh sách bài học');
@@ -100,7 +101,7 @@ export default function Lessons() {
         try {
           // Fetch sentence count
           const countResponse = await fetch(
-            `http://localhost:8000/api/v1/lessons/${lesson.id}/sentences-count`
+            `${API_BASE_URL}/api/v1/lessons/${lesson.id}/sentences-count`
           );
           const countData = await countResponse.json();
 
@@ -115,7 +116,7 @@ export default function Lessons() {
             try {
               const token = getAccessToken();
               const progressResponse = await fetch(
-                `http://localhost:8000/api/v1/practice/stats?lesson_id=${lesson.id}`,
+                `${API_BASE_URL}/api/v1/practice/stats?lesson_id=${lesson.id}`,
                 {
                   headers: {
                     Authorization: `Bearer ${token}`,

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE_URL } from '../config';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Mail, User, Lock, ArrowRight, Sparkles } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -122,7 +123,7 @@ export default function Auth() {
     try {
       if (mode === 'register') {
         // Register API call
-        const response = await fetch('http://localhost:8000/api/v1/auth/register', {
+        const response = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -145,7 +146,7 @@ export default function Auth() {
         setMode('login');
       } else {
         // Login API call
-        const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+        const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -166,7 +167,7 @@ export default function Auth() {
         localStorage.setItem('vi_en_refresh', data.refresh_token);
         
         // Fetch user info to check if admin
-        const userResponse = await fetch('http://localhost:8000/api/v1/auth/me', {
+        const userResponse = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
           headers: {
             'Authorization': `Bearer ${data.access_token}`,
           },
