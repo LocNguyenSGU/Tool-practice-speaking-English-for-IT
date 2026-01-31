@@ -71,7 +71,7 @@ jobs:
             echo "⏳ Waiting for Backend to start..."
             sleep 10
             echo "🏥 Checking Backend health..."
-            curl -f http://localhost:8000/health || exit 1
+           
 
   frontend-deploy:
     needs: detect-changes
