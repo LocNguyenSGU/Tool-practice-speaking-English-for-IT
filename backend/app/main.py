@@ -29,6 +29,12 @@ async def lifespan(app: FastAPI):
     # Startup: Create tables
     Base.metadata.create_all(bind=engine)
     print("✅ Database tables created")
+    
+    # Seed database with default users
+    from app.core.seed_data import seed_database
+    from app.core.database import SessionLocal
+    seed_database(SessionLocal)
+    
     yield
     # Shutdown: Cleanup
     print("👋 Shutting down...")

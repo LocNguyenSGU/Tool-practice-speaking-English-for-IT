@@ -38,6 +38,10 @@ class Settings(BaseSettings):
     first_admin_email: str = "admin@example.com"
     first_admin_password: str = "changeme123"
     
+    # Demo User
+    first_demo_email: str = "demo@example.com"
+    first_demo_password: str = "demo123"
+    
     # Server
     api_v1_prefix: str = "/api/v1"
     debug: bool = False
