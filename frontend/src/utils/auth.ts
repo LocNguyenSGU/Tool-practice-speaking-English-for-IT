@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../config';
+
 // Token management utilities
 
 const TOKEN_KEY = 'vi_en_token';
@@ -70,7 +72,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
   if (!refreshToken) return null;
 
   try {
-    const response = await fetch('http://localhost:8000/api/v1/auth/refresh', {
+    const response = await fetch(`${API_BASE_URL}/api/v1/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken }),

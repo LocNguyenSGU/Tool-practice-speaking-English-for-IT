@@ -13,6 +13,12 @@ export default defineConfig({
   server: {
     // Enable SPA fallback for client-side routing
     // This makes all routes serve index.html in development
-    historyApiFallback: true,
+    // This makes all routes serve index.html in development
+    proxy: {
+      '/api': {
+        target: 'http://139.99.103.223:9999',
+        changeOrigin: true,
+      },
+    },
   },
 })

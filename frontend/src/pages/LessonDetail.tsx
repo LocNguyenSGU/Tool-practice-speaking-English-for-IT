@@ -13,6 +13,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { getAccessToken } from '../utils/auth';
+import { API_BASE_URL } from '../config';
 
 interface Lesson {
   id: number;
@@ -79,7 +80,7 @@ export default function LessonDetail() {
 
     try {
       // Fetch lesson details
-      const lessonResponse = await fetch(`http://localhost:8000/api/v1/lessons/${id}`);
+      const lessonResponse = await fetch(`${API_BASE_URL}/api/v1/lessons/${id}`);
       if (!lessonResponse.ok) {
         throw new Error('Failed to fetch lesson');
       }
@@ -92,7 +93,7 @@ export default function LessonDetail() {
         page: currentPage.toString(),
         limit: '50'
       });
-      const sentencesResponse = await fetch(`http://localhost:8000/api/v1/sentences?${params}`);
+      const sentencesResponse = await fetch(`${API_BASE_URL}/api/v1/sentences?${params}`);
       if (!sentencesResponse.ok) {
         throw new Error('Failed to fetch sentences');
       }
@@ -106,7 +107,7 @@ export default function LessonDetail() {
         try {
           const statsParams = new URLSearchParams({ lesson_id: id! });
           const statsResponse = await fetch(
-            `http://localhost:8000/api/v1/practice/stats?${statsParams}`,
+            `${API_BASE_URL}/api/v1/practice/stats?${statsParams}`,
             {
               headers: {
                 'Authorization': `Bearer ${token}`
@@ -143,7 +144,7 @@ export default function LessonDetail() {
 
     // Play new audio
     if (audioRef.current) {
-      audioRef.current.src = `http://localhost:8000${audioUrl}`;
+      audioRef.current.src = `${API_BASE_URL}${audioUrl}`;
       setPlayingAudio({ sentenceId, lang });
       try {
         await audioRef.current.play();

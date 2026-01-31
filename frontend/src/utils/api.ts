@@ -1,6 +1,6 @@
 import { getAccessToken, refreshAccessToken } from './auth';
 
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from '../config';
 
 export interface ApiResponse<T = any> {
   data?: T;

@@ -15,6 +15,7 @@ import {
   X
 } from 'lucide-react';
 import { getAccessToken, refreshAccessToken, clearAuth } from '../utils/auth';
+import { API_BASE_URL } from '../config';
 
 // =============================================================================
 // TYPES
@@ -59,7 +60,7 @@ interface RecordResponse {
 // =============================================================================
 // CONSTANTS
 // =============================================================================
-const API_BASE = 'http://localhost:8000/api/v1';
+const API_BASE = `${API_BASE_URL}/api/v1`;
 
 // =============================================================================
 // HELPER FUNCTIONS (outside component to avoid recreation)

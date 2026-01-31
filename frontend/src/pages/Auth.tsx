@@ -53,7 +53,7 @@ export default function Auth() {
 
   const validatePassword = (password: string): string | undefined => {
     if (!password) return 'Mật khẩu là bắt buộc';
-    if (password.length < 6) return 'Mật khẩu phải có ít nhất 6 ký tự';
+    if (password.length < 5) return 'Mật khẩu phải có ít nhất 5 ký tự';
     return undefined;
   };
 
