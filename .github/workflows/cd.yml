@@ -61,11 +61,10 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:latest
             docker-compose up -d backend
             docker image prune -f
-
-      - name: Health check Backend
-        run: |
-          sleep 10
-          curl -f http://${{ secrets.DEPLOY_HOST }}:8000/health || exit 1
+            echo "⏳ Waiting for Backend to start..."
+            sleep 10
+            echo "🏥 Checking Backend health..."
+            curl -f http://localhost:8000/health || exit 1
 
   frontend-deploy:
     needs: detect-changes
@@ -103,11 +102,10 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:latest
             docker-compose up -d frontend
             docker image prune -f
-
-      - name: Health check Frontend
-        run: |
-          sleep 10
-          curl -f http://${{ secrets.DEPLOY_HOST }}/health || exit 1
+            echo "⏳ Waiting for Frontend to start..."
+            sleep 5
+            echo "🏥 Checking Frontend health..."
+            curl -f http://localhost/health || exit 1
 
   notify-deployment:
     needs: [backend-deploy, frontend-deploy]
