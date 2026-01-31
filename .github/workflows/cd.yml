@@ -80,6 +80,9 @@ jobs:
             # Pull latest images
             docker-compose -f docker-compose.prod.yml pull
             
+            # Stop and remove old containers to avoid conflicts
+            docker-compose -f docker-compose.prod.yml down --remove-orphans
+            
             # Restart services (only recreates changed containers)
             docker-compose -f docker-compose.prod.yml up -d
             

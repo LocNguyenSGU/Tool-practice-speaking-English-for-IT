@@ -24,7 +24,6 @@ async def get_audio(
 ):
     """
     Get audio file for a sentence
-
     - **sentence_id**: Sentence ID
     - **language**: Language code ('vi' or 'en')
     
