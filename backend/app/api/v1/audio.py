@@ -28,7 +28,6 @@ async def get_audio(
     - **sentence_id**: Sentence ID
     - **language**: Language code ('vi' or 'en')
     
-    
     Public endpoint (guest + registered users)
     
     Returns: MP3 audio file

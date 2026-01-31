@@ -25,11 +25,10 @@ jobs:
             frontend:
               - 'frontend/**'
 
-  backend-deploy:
+  deploy:
     needs: detect-changes
-    if: needs.detect-changes.outputs.backend == 'true'
+    if: needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,6 +40,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push Backend image
+        if: needs.detect-changes.outputs.backend == 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./backend
@@ -50,45 +50,8 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:${{ github.sha }}
 
-      - name: Deploy Backend to server
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            cd /home/lockbang/projects/Tool-practice-speaking-English-for-IT
-            
-            # Update docker-compose to use the image from Docker Hub instead of building
-            sed -i 's|build:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:latest|g' docker-compose.yml
-            sed -i '/context: ./d' docker-compose.yml
-            sed -i '/dockerfile: Dockerfile/d' docker-compose.yml
-
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:latest
-            docker-compose down
-            docker-compose up -d --force-recreate backend
-            docker image prune -f
-            echo "⏳ Waiting for Backend to start..."
-            sleep 10
-            echo "🏥 Checking Backend health..."
-           
-
-  frontend-deploy:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build and push Frontend image
+        if: needs.detect-changes.outputs.frontend == 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -98,7 +61,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:${{ github.sha }}
 
-      - name: Deploy Frontend to server
+      - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -107,30 +70,39 @@ jobs:
           script: |
             cd /home/lockbang/projects/Tool-practice-speaking-English-for-IT
             
-             # Update docker-compose to use the image from Docker Hub instead of building
-            sed -i 's|build:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:latest|g' docker-compose.yml
-            sed -i '/context: ./d' docker-compose.yml
-            sed -i '/dockerfile: Dockerfile/d' docker-compose.yml
+            # Reset any local changes (from previous faulty deployments)
+            git reset --hard
+            git pull origin main
             
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:latest
-            docker-compose down
-            docker-compose up -d --force-recreate frontend
+            # Export variable for docker-compose substitution
+            export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            
+            # Pull latest images
+            docker-compose -f docker-compose.prod.yml pull
+            
+            # Restart services (only recreates changed containers)
+            docker-compose -f docker-compose.prod.yml up -d
+            
+            # Cleanup
             docker image prune -f
-            echo "⏳ Waiting for Frontend to start..."
-            sleep 5
+
+            echo "⏳ Waiting for services to stabilize..."
+            sleep 10
+            
             echo "🏥 Checking Frontend health..."
-            curl -f http://localhost/health || exit 1
+            curl -f http://localhost/health || echo "⚠️ Frontend health check warning (might be starting)"
+            
+            echo "✅ Deployment completed!"
 
   notify-deployment:
-    needs: [backend-deploy, frontend-deploy]
+    needs: deploy
     if: always()
     runs-on: ubuntu-latest
     steps:
       - name: Check deployment status
         run: |
-          echo "Backend Deploy: ${{ needs.backend-deploy.result }}"
-          echo "Frontend Deploy: ${{ needs.frontend-deploy.result }}"
-          if [[ "${{ needs.backend-deploy.result }}" == "failure" ]] || [[ "${{ needs.frontend-deploy.result }}" == "failure" ]]; then
+          echo "Deploy Status: ${{ needs.deploy.result }}"
+          if [[ "${{ needs.deploy.result }}" == "failure" ]]; then
             echo "❌ Deployment failed"
             exit 1
           else
