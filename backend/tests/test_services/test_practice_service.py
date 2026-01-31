@@ -22,7 +22,8 @@ class TestPracticeService:
         )
         assert sentence is not None
         assert sentence.lesson_id == test_lesson.id
-        assert suggestion is None
+        assert suggestion is not None
+        assert suggestion["practiced_count"] == 0
     
     def test_get_next_sentence_with_user_no_history(self, db: Session, test_user: User, test_lesson: Lesson, test_sentences: list[Sentence]):
         """Test getting sentence for user with no practice history"""
@@ -73,7 +74,7 @@ class TestPracticeService:
         
         assert sentence.id in [s.id for s in test_sentences[2:]]
         assert progress_info is not None
-        assert progress_info["practiced_count"] == 0  # Never practiced
+        assert progress_info["practiced_count"] == 2  # 2 unique sentences practiced in this lesson
     
     def test_record_practice_creates_new_progress(self, db: Session, test_user: User, test_sentences: list[Sentence]):
         """Test recording practice creates new progress record"""

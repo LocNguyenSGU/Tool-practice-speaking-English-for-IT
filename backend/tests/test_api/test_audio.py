@@ -42,7 +42,7 @@ class TestAudioAPI:
             
             assert response.status_code == 200
             assert mock_generate.called
-            mock_generate.assert_called_with(sentence.id, "Xin chào", "vi")
+            mock_generate.assert_called_with("Xin chào", "vi", sentence.id)
         finally:
             # Cleanup temp file
             os.unlink(temp_file.name)
@@ -73,7 +73,7 @@ class TestAudioAPI:
             response = client.get(f"/api/v1/audio/{sentence.id}/en")
             
             assert response.status_code == 200
-            mock_generate.assert_called_with(sentence.id, "Hello", "en")
+            mock_generate.assert_called_with("Hello", "en", sentence.id)
         finally:
             os.unlink(temp_file.name)
     
