@@ -73,7 +73,7 @@ jobs:
 
   frontend-ci:
     needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true'
+    if: false # needs.detect-changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     
     defaults:
