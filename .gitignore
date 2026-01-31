@@ -32,3 +32,6 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+deploy_key
+deploy_key.pub
