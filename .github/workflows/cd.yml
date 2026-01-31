@@ -93,7 +93,15 @@ jobs:
             sleep 10
             
             echo "🏥 Checking Frontend health..."
-            curl -f http://localhost/health || echo "⚠️ Frontend health check warning (might be starting)"
+            if ! curl -sf http://localhost/health; then
+                echo "❌ Frontend health check FAILED"
+                echo "🐳 All containers:"
+                docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+                echo "📜 Frontend logs (if container exists):"
+                docker logs vi-en-frontend 2>&1 || echo "Container not found"
+                exit 1
+            fi
+            echo "✅ Frontend is healthy"
             
             echo "✅ Deployment completed!"
 
