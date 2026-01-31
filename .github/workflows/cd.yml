@@ -57,7 +57,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd /opt/vi-en-reflex-trainer
+            cd /home/lockbang/projects/Tool-practice-speaking-English-for-IT
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:latest
             docker-compose up -d backend
             docker image prune -f
@@ -98,7 +98,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd /opt/vi-en-reflex-trainer
+            cd /home/lockbang/projects/Tool-practice-speaking-English-for-IT
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:latest
             docker-compose up -d frontend
             docker image prune -f
