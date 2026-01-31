@@ -18,13 +18,14 @@ export const apiCall = async <T = any>(
   let token = getAccessToken();
 
   const makeRequest = async (authToken: string | null) => {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    };
+    const headers = new Headers(options.headers);
+    
+    if (!headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
 
     if (authToken) {
-      headers['Authorization'] = `Bearer ${authToken}`;
+      headers.set('Authorization', `Bearer ${authToken}`);
     }
 
     return fetch(`${API_BASE_URL}${url}`, {
