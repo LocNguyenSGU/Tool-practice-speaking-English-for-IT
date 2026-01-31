@@ -7,8 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['"Baloo 2"', 'cursive'],
-        body: ['"Comic Neue"', 'cursive'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
         primary: '#4F46E5',

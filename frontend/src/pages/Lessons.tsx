@@ -7,8 +7,7 @@ import {
   ChevronLeft, 
   ChevronRight,
   FileText,
-  TrendingUp,
-  Sparkles
+  TrendingUp
 } from 'lucide-react';
 import { getAccessToken } from '../utils/auth';
 
@@ -189,12 +188,11 @@ const renderPageNumbers = () => {
         <button
           key={i}
           onClick={() => setCurrentPage(i)}
-          className={`w-10 h-10 rounded-xl font-bold transition-all duration-200 ${
+          className={`min-w-[40px] h-10 px-3 rounded-lg font-medium transition-colors duration-200 ${
             i === currentPage
-              ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg'
-              : 'bg-white border-2 border-gray-200 text-gray-700 hover:border-indigo-300 hover:bg-indigo-50'
+              ? 'bg-indigo-600 text-white'
+              : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
           }`}
-          style={{ fontFamily: "'Baloo 2', cursive" }}
         >
           {i}
         </button>
@@ -205,20 +203,20 @@ const renderPageNumbers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b-2 border-indigo-100 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <BookOpen className="w-7 h-7 text-white" strokeWidth={2.5} />
+              <div className="w-10 h-10 flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-indigo-600" strokeWidth={2} />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900" style={{ fontFamily: "'Baloo 2', cursive" }}>
+                <h1 className="text-2xl font-semibold text-gray-900">
                   Danh sách bài học
                 </h1>
-                <p className="text-gray-600 text-sm" style={{ fontFamily: "'Comic Neue', cursive" }}>
+                <p className="text-sm text-gray-600 mt-0.5">
                   Chọn bài học để bắt đầu luyện tập
                 </p>
               </div>
@@ -226,37 +224,34 @@ const renderPageNumbers = () => {
             
             <Link
               to="/"
-              className="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-200"
-              style={{ fontFamily: "'Baloo 2', cursive" }}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
             >
               ← Trang chủ
             </Link>
           </div>
 
           {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col md:flex-row gap-3">
             {/* Search */}
             <form onSubmit={handleSearch} className="flex-1">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" strokeWidth={2.5} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" strokeWidth={2} />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm kiếm bài học..."
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200"
-                  style={{ fontFamily: "'Comic Neue', cursive" }}
+                  className="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none"
                 />
               </div>
             </form>
 
             {/* Filter & Sort */}
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <select
                 value={filterActive === null ? 'all' : filterActive.toString()}
                 onChange={(e) => setFilterActive(e.target.value === 'all' ? null : e.target.value === 'true')}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 cursor-pointer"
-                style={{ fontFamily: "'Comic Neue', cursive" }}
+                className="px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none cursor-pointer bg-white"
               >
                 <option value="all">Tất cả</option>
                 <option value="true">Đang hoạt động</option>
@@ -270,8 +265,7 @@ const renderPageNumbers = () => {
                   setSortBy(newSortBy as 'created_at' | 'order_index');
                   setSortOrder(newSortOrder as 'asc' | 'desc');
                 }}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 cursor-pointer"
-                style={{ fontFamily: "'Comic Neue', cursive" }}
+                className="px-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 outline-none cursor-pointer bg-white"
               >
                 <option value="order_index_asc">Thứ tự tăng dần</option>
                 <option value="order_index_desc">Thứ tự giảm dần</option>
@@ -284,36 +278,35 @@ const renderPageNumbers = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
           // Loading Skeleton
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg animate-pulse">
-                <div className="h-6 bg-gray-200 rounded-xl mb-4 w-3/4"></div>
-                <div className="h-4 bg-gray-200 rounded-lg mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded-lg mb-4 w-5/6"></div>
-                <div className="h-10 bg-gray-200 rounded-xl"></div>
+              <div key={i} className="bg-white rounded-lg p-6 border border-gray-200 animate-pulse">
+                <div className="h-5 bg-gray-200 rounded w-3/4 mb-3"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6 mb-4"></div>
+                <div className="h-10 bg-gray-200 rounded"></div>
               </div>
             ))}
           </div>
         ) : error ? (
           // Error State
           <div className="max-w-md mx-auto text-center py-16">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-2 border-red-200">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FileText className="w-8 h-8 text-red-600" strokeWidth={2.5} />
+            <div className="bg-white rounded-lg p-8 border border-gray-200 shadow-sm">
+              <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-6 h-6 text-red-600" strokeWidth={2} />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Baloo 2', cursive" }}>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Có lỗi xảy ra
               </h3>
-              <p className="text-gray-600 mb-6" style={{ fontFamily: "'Comic Neue', cursive" }}>
+              <p className="text-sm text-gray-600 mb-6">
                 {error}
               </p>
               <button
                 onClick={fetchLessons}
-                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-xl font-bold hover:shadow-lg transition-all duration-200"
-                style={{ fontFamily: "'Baloo 2', cursive" }}
+                className="px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200"
               >
                 Thử lại
               </button>
@@ -322,14 +315,14 @@ const renderPageNumbers = () => {
         ) : lessons.length === 0 ? (
           // Empty State
           <div className="max-w-md mx-auto text-center py-16">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl">
-              <div className="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <BookOpen className="w-10 h-10 text-indigo-600" strokeWidth={2.5} />
+            <div className="bg-white rounded-lg p-8 border border-gray-200 shadow-sm">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="w-8 h-8 text-gray-400" strokeWidth={2} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3" style={{ fontFamily: "'Baloo 2', cursive" }}>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Chưa có bài học nào
               </h3>
-              <p className="text-gray-600 mb-6" style={{ fontFamily: "'Comic Neue', cursive" }}>
+              <p className="text-sm text-gray-600 mb-6">
                 {searchQuery
                   ? 'Không tìm thấy bài học phù hợp. Thử tìm kiếm với từ khóa khác.'
                   : 'Danh sách bài học đang trống. Vui lòng quay lại sau.'}
@@ -340,8 +333,7 @@ const renderPageNumbers = () => {
                     setSearchQuery('');
                     setCurrentPage(1);
                   }}
-                  className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white rounded-xl font-bold hover:shadow-lg transition-all duration-200"
-                  style={{ fontFamily: "'Baloo 2', cursive" }}
+                  className="px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors duration-200"
                 >
                   Xóa tìm kiếm
                 </button>
@@ -352,134 +344,113 @@ const renderPageNumbers = () => {
           <>
             {/* Lessons Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {lessons.map((lesson, index) => {
+              {lessons.map((lesson) => {
                 const stats = lessonsStats.get(lesson.id);
                 const progress = stats?.progress;
 
                 return (
                   <div
                     key={lesson.id}
-                    className="group bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-white/50 cursor-pointer relative overflow-hidden"
-                    style={{
-                      animationDelay: `${index * 50}ms`,
-                      animation: 'fadeInUp 0.5s ease-out forwards',
-                    }}
+                    className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-1 relative overflow-hidden"
                   >
-                    {/* Background decoration */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full -translate-y-16 translate-x-16 opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                    {/* Subtle background decoration */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
                     
-                    {/* Badge & Circular Progress */}
-                    <div className="relative mb-4 flex items-center justify-between">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-indigo-500 to-indigo-400 text-white text-sm rounded-full font-semibold shadow-md">
-                        <Sparkles className="w-4 h-4" strokeWidth={2.5} />
-                        <span style={{ fontFamily: "'Comic Neue', cursive" }}>
+                    <div className="relative p-6">
+                      {/* Badge & Circular Progress */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-medium rounded-md">
                           Bài {lesson.order_index}
-                        </span>
+                        </div>
+                        
+                        {/* Circular Progress */}
+                        {progress && (
+                          <div className="relative w-12 h-12">
+                            <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
+                              {/* Background circle */}
+                              <circle
+                                cx="18"
+                                cy="18"
+                                r="15.5"
+                                fill="none"
+                                stroke="#E5E7EB"
+                                strokeWidth="3"
+                              />
+                              {/* Progress circle */}
+                              <circle
+                                cx="18"
+                                cy="18"
+                                r="15.5"
+                                fill="none"
+                                stroke="#22C55E"
+                                strokeWidth="3"
+                                strokeDasharray={`${progress.progress_percentage}, 100`}
+                                strokeLinecap="round"
+                                className="transition-all duration-500"
+                              />
+                            </svg>
+                            {/* Percentage text */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="text-xs font-semibold text-gray-700">
+                                {progress.progress_percentage}%
+                              </span>
+                            </div>
+                          </div>
+                        )}
                       </div>
+
+                      {/* Content */}
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                        {lesson.title}
+                      </h3>
                       
-                      {/* Circular Progress */}
+                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                        {lesson.description}
+                      </p>
+
+                      {/* Stats */}
+                      <div className="flex items-center gap-4 mb-4 text-xs text-gray-600">
+                        <div className="flex items-center gap-1">
+                          <FileText className="w-4 h-4" strokeWidth={2} />
+                          <span>{stats?.sentence_count || 0} câu</span>
+                        </div>
+                        {progress && (
+                          <div className="flex items-center gap-1 text-cta">
+                            <TrendingUp className="w-4 h-4" strokeWidth={2} />
+                            <span>{progress.total_practiced} đã học</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Progress Bar */}
                       {progress && (
-                        <div className="relative w-12 h-12">
-                          <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
-                            {/* Background circle */}
-                            <circle
-                              cx="18"
-                              cy="18"
-                              r="15.5"
-                              fill="none"
-                              stroke="#E5E7EB"
-                              strokeWidth="3"
-                            />
-                            {/* Progress circle */}
-                            <circle
-                              cx="18"
-                              cy="18"
-                              r="15.5"
-                              fill="none"
-                              stroke="url(#gradient-${lesson.id})"
-                              strokeWidth="3"
-                              strokeDasharray={`${progress.progress_percentage}, 100`}
-                              strokeLinecap="round"
-                              className="transition-all duration-500"
-                            />
-                            {/* Gradient definition */}
-                            <defs>
-                              <linearGradient id={`gradient-${lesson.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#22C55E" />
-                                <stop offset="100%" stopColor="#10B981" />
-                              </linearGradient>
-                            </defs>
-                          </svg>
-                          {/* Percentage text */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span 
-                              className="text-xs font-bold text-gray-700"
-                              style={{ fontFamily: "'Baloo 2', cursive" }}
-                            >
-                              {progress.progress_percentage}%
-                            </span>
+                        <div className="mb-4">
+                          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-cta transition-all duration-500 rounded-full"
+                              style={{ width: `${progress.progress_percentage}%` }}
+                            ></div>
                           </div>
                         </div>
                       )}
-                    </div>
 
-                    {/* Content */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 relative" style={{ fontFamily: "'Baloo 2', cursive" }}>
-                      {lesson.title}
-                    </h3>
-                    
-                    <p className="text-gray-600 mb-4 line-clamp-2 relative" style={{ fontFamily: "'Comic Neue', cursive" }}>
-                      {lesson.description}
-                    </p>
-
-                    {/* Stats */}
-                    <div className="flex items-center gap-4 mb-4 text-sm relative">
-                      <div className="flex items-center gap-1 text-gray-600">
-                        <FileText className="w-4 h-4" strokeWidth={2.5} />
-                        <span style={{ fontFamily: "'Comic Neue', cursive" }}>
-                          {stats?.sentence_count || 0} câu
-                        </span>
+                      {/* Buttons */}
+                      <div className="flex gap-2">
+                        <Link
+                          to={`/lessons/${lesson.id}`}
+                          className="flex-1 bg-white border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2"
+                        >
+                          <BookOpen className="w-4 h-4" strokeWidth={2} />
+                          <span>Chi tiết</span>
+                        </Link>
+                        <Link
+                          to={`/practice?lesson_id=${lesson.id}`}
+                          className="flex-1 bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors duration-200 flex items-center justify-center gap-2"
+                        >
+                          <span>Luyện tập</span>
+                          <ArrowRight className="w-4 h-4 transition-transform" strokeWidth={2} />
+                        </Link>
                       </div>
-                      {progress && (
-                        <div className="flex items-center gap-1 text-green-600">
-                          <TrendingUp className="w-4 h-4" strokeWidth={2.5} />
-                          <span style={{ fontFamily: "'Comic Neue', cursive" }}>
-                            {progress.progress_percentage}% hoàn thành
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Progress Bar */}
-                    {progress && (
-                      <div className="mb-4 relative">
-                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-green-500 to-green-400 transition-all duration-500 rounded-full"
-                            style={{ width: `${progress.progress_percentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Buttons */}
-                    <div className="relative flex gap-2">
-                      <Link
-                        to={`/lessons/${lesson.id}`}
-                        className="flex-1 bg-gradient-to-r from-purple-600 to-purple-500 text-white px-4 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 group/btn"
-                        style={{ fontFamily: "'Baloo 2', cursive" }}
-                      >
-                        <BookOpen className="w-5 h-5" strokeWidth={2.5} />
-                        <span>Chi tiết</span>
-                      </Link>
-                      <Link
-                        to={`/practice?lesson_id=${lesson.id}`}
-                        className="flex-1 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white px-4 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 group/btn"
-                        style={{ fontFamily: "'Baloo 2', cursive" }}
-                      >
-                        <span>Luyện tập</span>
-                        <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" strokeWidth={2.5} />
-                      </Link>
                     </div>
                   </div>
                 );
@@ -492,9 +463,9 @@ const renderPageNumbers = () => {
                 <button
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={!pagination.has_prev}
-                  className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
+                  className="w-10 h-10 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
                 >
-                  <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
+                  <ChevronLeft className="w-5 h-5" strokeWidth={2} />
                 </button>
 
                 {renderPageNumbers()}
@@ -502,29 +473,15 @@ const renderPageNumbers = () => {
                 <button
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={!pagination.has_next}
-                  className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
+                  className="w-10 h-10 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center"
                 >
-                  <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
+                  <ChevronRight className="w-5 h-5" strokeWidth={2} />
                 </button>
               </div>
             )}
           </>
         )}
       </main>
-
-      {/* Keyframes for animation */}
-      <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 }

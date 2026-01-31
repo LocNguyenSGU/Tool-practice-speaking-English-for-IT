@@ -650,15 +650,15 @@ export default function Practice() {
 
   if (!lessonId) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4" style={{ fontFamily: "'Baloo 2', cursive" }}>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4" >
             Thiếu thông tin bài học
           </h1>
           <button
             onClick={() => navigate('/lessons')}
-            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors duration-200 cursor-pointer"
-            style={{ fontFamily: "'Comic Neue', cursive" }}
+            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors duration-200 cursor-pointer"
+            
           >
             Quay lại danh sách
           </button>
@@ -672,58 +672,58 @@ export default function Practice() {
   // ---------------------------------------------------------------------------
   if (isCompleted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 relative overflow-hidden">
         <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
         
-        <div className="max-w-md w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 shadow-2xl text-center relative z-10 border-4 border-green-200 dark:border-green-800">
+        <div className="max-w-md w-full bg-white backdrop-blur-sm rounded-lg p-8 shadow-lg text-center relative z-10 border border-green-200">
           <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full mb-6 shadow-lg">
             <Trophy className="text-white" size={48} />
           </div>
           
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3" style={{ fontFamily: "'Baloo 2', cursive" }}>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3" >
             Xuất sắc! 🎉
           </h1>
           
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-8" style={{ fontFamily: "'Comic Neue', cursive" }}>
+          <p className="text-lg text-gray-700 mb-8" >
             Bạn đã hoàn thành tất cả câu trong bài học này!
           </p>
 
           {progress && (
-            <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-              <p style={{ fontFamily: "'Comic Neue', cursive" }}>
+            <div className="mb-4 text-sm text-gray-600">
+              <p >
                 Đã luyện: {progress.practiced_count}/{progress.total_in_lesson} câu
               </p>
             </div>
           )}
 
           {streakDays > 0 && (
-            <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-orange-100 dark:bg-orange-900/30 rounded-xl">
-              <Flame className="text-orange-600 dark:text-orange-400" size={24} />
-              <span className="text-orange-700 dark:text-orange-300 font-bold text-lg" style={{ fontFamily: "'Baloo 2', cursive" }}>
+            <div className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-orange-100 rounded-lg">
+              <Flame className="text-orange-600" size={24} />
+              <span className="text-orange-700 font-bold text-lg">
                 Streak: {streakDays} ngày
               </span>
             </div>
           )}
 
-          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-            <p className="text-xs text-blue-700 dark:text-blue-300" style={{ fontFamily: "'Comic Neue', cursive" }}>
-              💡 <strong>Lưu ý:</strong> Tiến độ của bạn đã được lưu! "Ôn lại từ đầu" chỉ giúp bạn học lại các câu, không xóa tiến độ đã hoàn thành.
+          <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-xs text-blue-700">
+              ℹ️ <strong>Lưu ý:</strong> Tiến độ của bạn đã được lưu! "Ôn lại từ đầu" chỉ giúp bạn học lại các câu, không xóa tiến độ đã hoàn thành.
             </p>
           </div>
 
           <div className="flex flex-col gap-3">
             <button
               onClick={startReviewMode}
-              className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl font-bold transition-all duration-200 cursor-pointer"
-              style={{ fontFamily: "'Baloo 2', cursive" }}
+              className="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors duration-200 cursor-pointer"
+              
             >
               Ôn lại từ đầu
             </button>
             
             <button
               onClick={() => navigate('/lessons')}
-              className="w-full px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-bold transition-all duration-200 cursor-pointer"
-              style={{ fontFamily: "'Baloo 2', cursive" }}
+              className="w-full px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-bold transition-all duration-200 cursor-pointer"
+              
             >
               Về danh sách bài học
             </button>
@@ -738,26 +738,26 @@ export default function Practice() {
   // ---------------------------------------------------------------------------
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 text-center shadow-xl">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4" style={{ fontFamily: "'Baloo 2', cursive" }}>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white backdrop-blur-sm rounded-lg p-8 text-center shadow-xl">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4" >
             Có lỗi xảy ra
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6" style={{ fontFamily: "'Comic Neue', cursive" }}>
+          <p className="text-gray-600 mb-6" >
             {error}
           </p>
           <div className="flex gap-3">
             <button
               onClick={loadNextSentence}
-              className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors duration-200 cursor-pointer"
-              style={{ fontFamily: "'Comic Neue', cursive" }}
+              className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors duration-200 cursor-pointer"
+              
             >
               Thử lại
             </button>
             <button
               onClick={() => navigate(`/lessons/${lessonId}`)}
-              className="flex-1 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl transition-colors duration-200 cursor-pointer"
-              style={{ fontFamily: "'Comic Neue', cursive" }}
+              className="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg transition-colors duration-200 cursor-pointer"
+              
             >
               Quay lại
             </button>
@@ -772,7 +772,7 @@ export default function Practice() {
   // ---------------------------------------------------------------------------
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950 p-4">
+    <div className="min-h-screen bg-gray-50 p-4">
       <audio ref={audioRef} onEnded={handleAudioEnded} className="hidden" />
       
       <div className="max-w-7xl mx-auto flex gap-4">
@@ -783,8 +783,8 @@ export default function Practice() {
             {/* Exit Button */}
             <button
               onClick={() => navigate(`/lessons/${lessonId}`)}
-              className="flex items-center gap-2 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 cursor-pointer"
-              style={{ fontFamily: "'Comic Neue', cursive" }}
+              className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 cursor-pointer"
+              
             >
               <ArrowLeft size={20} />
               <span className="hidden sm:inline">Thoát</span>
@@ -793,12 +793,9 @@ export default function Practice() {
             <div className="flex items-center gap-2">
               {/* Review Mode Badge */}
               {isReviewMode && (
-                <div className="flex items-center gap-2 px-3 py-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl shadow-sm">
-                  <Sparkles className="text-blue-600 dark:text-blue-400" size={20} />
-                  <span 
-                    className="text-blue-700 dark:text-blue-300 font-bold text-sm"
-                    style={{ fontFamily: "'Baloo 2', cursive" }}
-                  >
+                <div className="flex items-center gap-2 px-3 py-2 bg-blue-100 rounded-lg shadow-sm">
+                  <Sparkles className="text-blue-600" size={20} />
+                  <span className="text-blue-700 font-bold text-sm">
                     Chế độ ôn tập
                   </span>
                 </div>
@@ -806,12 +803,9 @@ export default function Practice() {
 
               {/* Streak Badge */}
               {streakDays > 0 && (
-                <div className="flex items-center gap-2 px-3 py-2 bg-orange-100 dark:bg-orange-900/30 rounded-xl shadow-sm">
-                  <Flame className="text-orange-600 dark:text-orange-400" size={20} />
-                  <span 
-                    className="text-orange-700 dark:text-orange-300 font-bold text-sm"
-                    style={{ fontFamily: "'Baloo 2', cursive" }}
-                  >
+                <div className="flex items-center gap-2 px-3 py-2 bg-orange-100 rounded-lg shadow-sm">
+                  <Flame className="text-orange-600" size={20} />
+                  <span className="text-orange-700 font-bold text-sm">
                     {streakDays} ngày
                   </span>
                 </div>
@@ -820,8 +814,7 @@ export default function Practice() {
               {/* Toggle Sidebar Button - visible on all screen sizes */}
               <button
                 onClick={() => setShowSidebar(!showSidebar)}
-                className="flex items-center gap-2 px-3 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-xl transition-colors duration-200 cursor-pointer hover:bg-indigo-200 dark:hover:bg-indigo-900/50"
-                style={{ fontFamily: "'Comic Neue', cursive" }}
+                className="flex items-center gap-2 px-3 py-2 bg-indigo-100 text-indigo-700 rounded-lg transition-colors duration-200 cursor-pointer hover:bg-indigo-200"
               >
                 {showSidebar ? <X size={20} /> : <List size={20} />}
                 <span className="hidden sm:inline text-sm">{showSidebar ? 'Ẩn' : 'Danh sách'}</span>
@@ -833,22 +826,16 @@ export default function Practice() {
         {progress && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <span 
-                className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                style={{ fontFamily: "'Comic Neue', cursive" }}
-              >
+              <span className="text-sm font-medium text-gray-700">
                 {progress.practiced_count}/{progress.total_in_lesson} câu
               </span>
-              <span 
-                className="text-sm font-bold text-indigo-600 dark:text-indigo-400"
-                style={{ fontFamily: "'Baloo 2', cursive" }}
-              >
+              <span className="text-sm font-bold text-indigo-600">
                 {progress.percentage}%
               </span>
             </div>
-            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-all duration-500 ease-out rounded-full"
+                className="h-full bg-indigo-600 transition-all duration-500 ease-out rounded-full"
                 style={{ width: `${progress.percentage}%` }}
               />
             </div>
@@ -857,21 +844,18 @@ export default function Practice() {
 
         {/* Sentence Card */}
         {isLoading ? (
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-2xl border-4 border-indigo-100 dark:border-indigo-900/50 animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-lg mb-6 w-3/4 mx-auto"></div>
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 w-1/2 mx-auto"></div>
-            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl w-full"></div>
+          <div className="bg-white backdrop-blur-sm rounded-lg p-8 md:p-12 shadow-lg border border-indigo-100 animate-pulse">
+            <div className="h-8 bg-gray-200 rounded-lg mb-6 w-3/4 mx-auto"></div>
+            <div className="h-6 bg-gray-200 rounded-lg mb-4 w-1/2 mx-auto"></div>
+            <div className="h-12 bg-gray-200 rounded-lg w-full"></div>
           </div>
         ) : sentence ? (
-          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-2xl border-4 border-indigo-100 dark:border-indigo-900/50 mb-6">
+          <div className="bg-white backdrop-blur-sm rounded-lg p-8 md:p-12 shadow-lg border border-indigo-100 mb-6">
             {/* Vietnamese Text */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-2 mb-4">
                 <span className="text-2xl" role="img" aria-label="Vietnam flag">🇻🇳</span>
-                <h2 
-                  className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white"
-                  style={{ fontFamily: "'Baloo 2', cursive" }}
-                >
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
                   {sentence.vi_text}
                 </h2>
               </div>
@@ -880,13 +864,13 @@ export default function Practice() {
               <button
                 onClick={() => handlePlayAudio('vi')}
                 className={`
-                  inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-200 cursor-pointer shadow-lg
+                  inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 cursor-pointer shadow-md
                   ${playingAudio === 'vi'
-                    ? 'bg-indigo-600 text-white scale-105'
-                    : 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
                   }
                 `}
-                style={{ fontFamily: "'Comic Neue', cursive" }}
+                
               >
                 {playingAudio === 'vi' ? (
                   <>
@@ -905,13 +889,13 @@ export default function Practice() {
             {/* Divider */}
             <div className="relative my-8">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t-2 border-gray-200 dark:border-gray-700"></div>
+                <div className="w-full border-t-2 border-gray-200"></div>
               </div>
               <div className="relative flex justify-center">
                 <button
                   onClick={() => setShowAnswer(!showAnswer)}
-                  className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 cursor-pointer flex items-center gap-2"
-                  style={{ fontFamily: "'Comic Neue', cursive" }}
+                  className="px-4 py-2 bg-white text-gray-600 hover:text-gray-900 transition-colors duration-200 cursor-pointer flex items-center gap-2"
+                  
                 >
                   {showAnswer ? <EyeOff size={16} /> : <Eye size={16} />}
                   <span className="text-sm font-medium">
@@ -930,10 +914,7 @@ export default function Practice() {
             >
               <div className="flex items-center justify-center gap-2 mb-4">
                 <span className="text-2xl" role="img" aria-label="US flag">🇺🇸</span>
-                <h3 
-                  className="text-2xl md:text-3xl font-bold text-gray-700 dark:text-gray-300"
-                  style={{ fontFamily: "'Baloo 2', cursive" }}
-                >
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-700">
                   {sentence.en_text}
                 </h3>
               </div>
@@ -942,13 +923,13 @@ export default function Practice() {
               <button
                 onClick={() => handlePlayAudio('en')}
                 className={`
-                  inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-200 cursor-pointer shadow-lg
+                  inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-200 cursor-pointer shadow-md
                   ${playingAudio === 'en'
-                    ? 'bg-purple-600 text-white scale-105'
-                    : 'bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
                   }
                 `}
-                style={{ fontFamily: "'Comic Neue', cursive" }}
+                
               >
                 {playingAudio === 'en' ? (
                   <>
@@ -970,17 +951,16 @@ export default function Practice() {
         {sentence && (
           <>
             {isReviewMode && (
-              <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-center">
-                <p className="text-sm text-blue-700 dark:text-blue-300" style={{ fontFamily: "'Comic Neue', cursive" }}>
-                  💡 <strong>Chế độ ôn tập:</strong> Tiến độ sẽ không được cập nhật
+              <div className="mb-3 p-3 bg-blue-50 rounded-lg text-center">
+                <p className="text-sm text-blue-700">
+                  ℹ️ <strong>Chế độ ôn tập:</strong> Tiến độ sẽ không được cập nhật
                 </p>
               </div>
             )}
             <div className="grid grid-cols-2 gap-3 mb-4">
               <button
                 onClick={recordPracticeAndNext}
-                className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer"
-                style={{ fontFamily: "'Baloo 2', cursive" }}
+                className="flex items-center justify-center gap-2 px-6 py-4 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
               >
                 <Check size={24} />
                 <div className="text-left">
@@ -991,8 +971,7 @@ export default function Practice() {
 
               <button
                 onClick={skipSentence}
-                className="flex items-center justify-center gap-2 px-6 py-4 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-xl font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer"
-                style={{ fontFamily: "'Baloo 2', cursive" }}
+                className="flex items-center justify-center gap-2 px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-900 rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
               >
                 <SkipForward size={24} />
                 <div className="text-left">
@@ -1005,33 +984,30 @@ export default function Practice() {
         )}
 
         {/* Keyboard Shortcuts Hint */}
-        <div className="text-center bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-3">
-          <p 
-            className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-semibold"
-            style={{ fontFamily: "'Comic Neue', cursive" }}
-          >
-            ⌨️ Phím tắt
+        <div className="text-center bg-indigo-50 rounded-lg p-3">
+          <p className="text-xs text-gray-600 mb-2 font-semibold">
+            ⚡ Phím tắt
           </p>
           <div className="flex flex-wrap justify-center gap-2 text-xs">
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white dark:bg-gray-800 rounded">
-              <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">Space</kbd>
-              <span className="text-gray-600 dark:text-gray-400">Nghe Vi</span>
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded">
+              <kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">Space</kbd>
+              <span className="text-gray-600">Nghe Vi</span>
             </span>
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white dark:bg-gray-800 rounded">
-              <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">E</kbd>
-              <span className="text-gray-600 dark:text-gray-400">Nghe En</span>
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded">
+              <kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">E</kbd>
+              <span className="text-gray-600">Nghe En</span>
             </span>
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white dark:bg-gray-800 rounded">
-              <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">Enter</kbd>
-              <span className="text-gray-600 dark:text-gray-400">Đáp án</span>
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded">
+              <kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">Enter</kbd>
+              <span className="text-gray-600">Đáp án</span>
             </span>
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white dark:bg-gray-800 rounded">
-              <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">→</kbd>
-              <span className="text-gray-600 dark:text-gray-400">Thuộc</span>
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded">
+              <kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">→</kbd>
+              <span className="text-gray-600">Thuộc</span>
             </span>
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white dark:bg-gray-800 rounded">
-              <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">←</kbd>
-              <span className="text-gray-600 dark:text-gray-400">Bỏ qua</span>
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded">
+              <kbd className="px-1.5 py-0.5 bg-gray-100 rounded font-mono">←</kbd>
+              <span className="text-gray-600">Bỏ qua</span>
             </span>
           </div>
         </div>
@@ -1039,22 +1015,19 @@ export default function Practice() {
 
       {/* Sidebar */}
       <div className={`
-        fixed lg:static inset-y-0 right-0 w-80 bg-white dark:bg-gray-800 
-        shadow-2xl lg:shadow-lg rounded-l-3xl lg:rounded-2xl 
+        fixed lg:static inset-y-0 right-0 w-80 bg-white 
+        shadow-lg lg:shadow-lg rounded-l-3xl lg:rounded-lg 
         transition-transform duration-300 ease-in-out z-50
         ${showSidebar ? 'translate-x-0' : 'translate-x-full'}
       `}>
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 
-            className="text-lg font-bold text-gray-900 dark:text-white"
-            style={{ fontFamily: "'Baloo 2', cursive" }}
-          >
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <h3 className="text-lg font-bold text-gray-900">
             Danh sách câu ({practicedIds.size}/{allSentences.length})
           </h3>
           <button
             onClick={() => setShowSidebar(false)}
-            className="lg:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors cursor-pointer"
+            className="lg:hidden p-2 text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -1063,8 +1036,8 @@ export default function Practice() {
         {/* Sentence List */}
         <div className="overflow-y-auto h-[calc(100vh-80px)] p-4 space-y-2">
           {allSentences.length === 0 ? (
-            <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-              <p style={{ fontFamily: "'Comic Neue', cursive" }}>Đang tải...</p>
+            <div className="text-center text-gray-500 py-8">
+              <p>Đang tải...</p>
             </div>
           ) : (
             allSentences.map((item) => {
@@ -1076,13 +1049,13 @@ export default function Practice() {
                   key={item.sentence_id}
                   onClick={() => jumpToSentence(item.sentence_id)}
                   className={`
-                    w-full p-3 rounded-xl transition-all duration-200 cursor-pointer
+                    w-full p-3 rounded-lg transition-all duration-200 cursor-pointer
                     hover:scale-[1.02] active:scale-[0.98]
                     ${isCurrent 
-                      ? 'bg-indigo-100 dark:bg-indigo-900/40 ring-2 ring-indigo-500' 
+                      ? 'bg-indigo-100 ring-2 ring-indigo-500' 
                       : isPracticed
-                        ? 'bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30'
-                        : 'bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        ? 'bg-green-50 hover:bg-green-100'
+                        : 'bg-gray-50 hover:bg-gray-100'
                     }
                   `}
                 >
@@ -1094,7 +1067,7 @@ export default function Practice() {
                           <Check size={14} className="text-white" />
                         </div>
                       ) : (
-                        <div className="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+                        <div className="w-6 h-6 rounded-full border-2 border-gray-300"></div>
                       )}
                     </div>
 
@@ -1103,20 +1076,18 @@ export default function Practice() {
                       <p 
                         className={`text-sm font-medium mb-1 ${
                           isCurrent 
-                            ? 'text-indigo-900 dark:text-indigo-100' 
-                            : 'text-gray-900 dark:text-white'
+                            ? 'text-indigo-900' 
+                            : 'text-gray-900'
                         }`}
-                        style={{ fontFamily: "'Comic Neue', cursive" }}
                       >
                         {item.vietnamese}
                       </p>
                       <p 
                         className={`text-xs ${
                           isCurrent 
-                            ? 'text-indigo-600 dark:text-indigo-300' 
-                            : 'text-gray-600 dark:text-gray-400'
+                            ? 'text-indigo-600' 
+                            : 'text-gray-600'
                         }`}
-                        style={{ fontFamily: "'Comic Neue', cursive" }}
                       >
                         {item.english}
                       </p>
