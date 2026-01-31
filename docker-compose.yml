@@ -32,7 +32,7 @@ services:
     volumes:
       - ./backend/audio:/app/audio
     ports:
-      - "8000:8000"
+      - "9999:8000"
     depends_on:
       postgres:
         condition: service_healthy
