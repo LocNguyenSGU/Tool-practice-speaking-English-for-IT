@@ -55,7 +55,7 @@ jobs:
 
       - name: Run pytest
         run: |
-          pytest -v --cov=app --cov-report=term-missing
+          pytest
         env:
           DATABASE_URL: postgresql://test_user:test_pass@localhost:5432/test_db
           SECRET_KEY: test-secret-key-for-ci
