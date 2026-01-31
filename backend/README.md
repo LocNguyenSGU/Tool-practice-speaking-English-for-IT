@@ -122,7 +122,7 @@ pytest tests/test_api.py::test_login -v
 ## 🗄️ Database
 
 **Current Setup**:
-- PostgreSQL on Docker (port 5433)
+- PostgreSQL on Docker (port 5434)
 - Database: `vi_en_trainer`
 - User: `postgres`
 - Password: `mysecretpassword`
@@ -149,7 +149,7 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 ### 2. Update .env
 ```env
 SECRET_KEY=<generated-key>
-DATABASE_URL=postgresql://user:pass@host:5433/db
+DATABASE_URL=postgresql://user:pass@host:5434/db
 CORS_ORIGINS=https://yourdomain.com
 DEBUG=False
 ```
@@ -240,7 +240,7 @@ kill -9 $(lsof -ti:8000)
 **Database connection error**:
 - Check PostgreSQL is running: `docker ps`
 - Verify credentials in `.env`
-- Test connection: `psql -h localhost -p 5433 -U postgres -d vi_en_trainer`
+- Test connection: `psql -h localhost -p 5434 -U postgres -d vi_en_trainer`
 
 **Migration errors**:
 ```bash
@@ -429,7 +429,7 @@ python -c "import secrets; print(secrets.token_urlsafe(32))"
 ### 2. Update .env
 ```env
 SECRET_KEY=<generated-key>
-DATABASE_URL=postgresql://user:pass@host:5433/db
+DATABASE_URL=postgresql://user:pass@host:5434/db
 CORS_ORIGINS=https://yourdomain.com
 ```
 

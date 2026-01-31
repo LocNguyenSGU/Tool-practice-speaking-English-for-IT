@@ -91,8 +91,8 @@ if [ ! -f ".env" ]; then
         read -p "   Database host (localhost): " DB_HOST
         DB_HOST=${DB_HOST:-localhost}
         
-        read -p "   Database port (5433): " DB_PORT
-        DB_PORT=${DB_PORT:-5433}
+        read -p "   Database port (5434): " DB_PORT
+        DB_PORT=${DB_PORT:-5434}
         
         read -p "   Database name (vi_en_trainer): " DB_NAME
         DB_NAME=${DB_NAME:-vi_en_trainer}
