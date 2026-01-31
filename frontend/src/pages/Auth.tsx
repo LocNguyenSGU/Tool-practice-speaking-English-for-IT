@@ -165,8 +165,28 @@ export default function Auth() {
         localStorage.setItem('vi_en_token', data.access_token);
         localStorage.setItem('vi_en_refresh', data.refresh_token);
         
-        // Redirect to lessons
-        window.location.href = '/lessons';
+        // Fetch user info to check if admin
+        const userResponse = await fetch('http://localhost:8000/api/v1/auth/me', {
+          headers: {
+            'Authorization': `Bearer ${data.access_token}`,
+          },
+        });
+
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          // Store user data
+          localStorage.setItem('vi_en_user', JSON.stringify(userData));
+          
+          // Redirect based on user role
+          if (userData.is_admin) {
+            window.location.href = '/admin';
+          } else {
+            window.location.href = '/lessons';
+          }
+        } else {
+          // Fallback to lessons if we can't fetch user info
+          window.location.href = '/lessons';
+        }
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Có lỗi xảy ra', {

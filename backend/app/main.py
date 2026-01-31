@@ -19,7 +19,7 @@ from app.core.exceptions import (
     BadRequestException,
     ConflictException,
 )
-from app.api.v1 import auth, lessons, sentences, audio, practice
+from app.api.v1 import auth, lessons, sentences, audio, practice, users
 
 
 # Lifespan context manager
@@ -145,3 +145,4 @@ app.include_router(lessons.router, prefix="/api/v1", tags=["Lessons"])
 app.include_router(sentences.router, prefix="/api/v1", tags=["Sentences"])
 app.include_router(audio.router, prefix="/api/v1", tags=["Audio"])
 app.include_router(practice.router, prefix="/api/v1", tags=["Practice"])
+app.include_router(users.router, prefix="/api/v1", tags=["Users"])
