@@ -30,6 +30,7 @@ async def get_audio(
     
     Public endpoint (guest + registered users)
     
+    
     Returns: MP3 audio file
     
     Note: Audio is generated on-demand if not exists and cached for future requests
