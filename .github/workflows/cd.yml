@@ -58,8 +58,15 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd /home/lockbang/projects/Tool-practice-speaking-English-for-IT
+            
+            # Update docker-compose to use the image from Docker Hub instead of building
+            sed -i 's|build:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:latest|g' docker-compose.yml
+            sed -i '/context: ./d' docker-compose.yml
+            sed -i '/dockerfile: Dockerfile/d' docker-compose.yml
+
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-backend:latest
-            docker-compose up -d backend
+            docker-compose down
+            docker-compose up -d --force-recreate backend
             docker image prune -f
             echo "⏳ Waiting for Backend to start..."
             sleep 10
@@ -99,8 +106,15 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd /home/lockbang/projects/Tool-practice-speaking-English-for-IT
+            
+             # Update docker-compose to use the image from Docker Hub instead of building
+            sed -i 's|build:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:latest|g' docker-compose.yml
+            sed -i '/context: ./d' docker-compose.yml
+            sed -i '/dockerfile: Dockerfile/d' docker-compose.yml
+            
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/vi-en-frontend:latest
-            docker-compose up -d frontend
+            docker-compose down
+            docker-compose up -d --force-recreate frontend
             docker image prune -f
             echo "⏳ Waiting for Frontend to start..."
             sleep 5
