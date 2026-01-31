@@ -93,7 +93,7 @@ jobs:
             sleep 10
             
             echo "🏥 Checking Frontend health..."
-            if ! curl -sf http://localhost/health; then
+            if ! curl -sf http://localhost:3001/health; then
                 echo "❌ Frontend health check FAILED"
                 echo "🐳 All containers:"
                 docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
