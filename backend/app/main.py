@@ -20,6 +20,7 @@ from app.core.exceptions import (
     ConflictException,
 )
 from app.api.v1 import auth, lessons, sentences, audio, practice, users
+from app.api.v1.websocket import speech_practice as ws_speech_practice
 
 
 # Lifespan context manager
@@ -152,3 +153,9 @@ app.include_router(sentences.router, prefix="/api/v1", tags=["Sentences"])
 app.include_router(audio.router, prefix="/api/v1", tags=["Audio"])
 app.include_router(practice.router, prefix="/api/v1", tags=["Practice"])
 app.include_router(users.router, prefix="/api/v1", tags=["Users"])
+
+# WebSocket routes
+@app.websocket("/ws/speech-practice")
+async def websocket_speech_practice_endpoint(websocket, token: str = ""):
+    """WebSocket endpoint for real-time speech practice"""
+    await ws_speech_practice.websocket_speech_practice(websocket, token)

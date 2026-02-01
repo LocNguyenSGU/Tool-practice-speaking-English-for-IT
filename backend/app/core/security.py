@@ -43,3 +43,23 @@ def decode_token(token: str) -> Dict:
     """Decode JWT token."""
     payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
     return payload
+
+
+def verify_token(token: str) -> Dict:
+    """
+    Verify and decode JWT token
+    
+    Args:
+        token: JWT token string
+        
+    Returns:
+        Decoded token payload
+        
+    Raises:
+        JWTError: If token is invalid or expired
+    """
+    try:
+        payload = decode_token(token)
+        return payload
+    except JWTError as e:
+        raise JWTError(f"Invalid token: {str(e)}")
