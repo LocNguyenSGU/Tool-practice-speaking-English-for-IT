@@ -15,6 +15,8 @@ from app.core.database import Base, get_db
 from app.models.user import User
 from app.models.lesson import Lesson
 from app.models.sentence import Sentence
+from app.models.llm_provider import LLMProviderConfig, LLMAPIKey, LLMUsageLog
+from app.models.speech_practice import SpeechPracticeSession, UserProgressLLM
 from app.core.security import get_password_hash
 
 

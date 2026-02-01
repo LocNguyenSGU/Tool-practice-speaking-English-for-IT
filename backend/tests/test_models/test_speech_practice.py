@@ -1,10 +1,9 @@
 import pytest
 from datetime import datetime
 from app.models.speech_practice import SpeechPracticeSession, UserProgressLLM
-from app.core.database import SessionLocal
+from sqlalchemy.orm import Session
 
-def test_create_speech_practice_session():
-    db = SessionLocal()
+def test_create_speech_practice_session(db: Session):
     session = SpeechPracticeSession(
         id="test-session-123",
         user_id="user-456",
@@ -19,10 +18,8 @@ def test_create_speech_practice_session():
     assert session.id == "test-session-123"
     assert session.mode == "conversation"
     assert session.transcript == "Hello world"
-    db.close()
 
-def test_create_user_progress_llm():
-    db = SessionLocal()
+def test_create_user_progress_llm(db: Session):
     progress = UserProgressLLM(
         user_id="user-789",
         total_sessions=5,
@@ -36,10 +33,8 @@ def test_create_user_progress_llm():
     assert progress.id is not None
     assert progress.total_sessions == 5
     assert progress.average_score == 8.5
-    db.close()
 
-def test_speech_session_with_scores():
-    db = SessionLocal()
+def test_speech_session_with_scores(db: Session):
     session = SpeechPracticeSession(
         id="test-session-456",
         user_id="user-123",
@@ -54,4 +49,3 @@ def test_speech_session_with_scores():
     
     assert session.overall_score == 9.0
     assert session.pronunciation_score == 8.5
-    db.close()

@@ -1,9 +1,8 @@
 import pytest
 from app.models.llm_provider import LLMProviderConfig, LLMAPIKey
-from app.core.database import SessionLocal
+from sqlalchemy.orm import Session
 
-def test_create_llm_provider():
-    db = SessionLocal()
+def test_create_llm_provider(db: Session):
     provider = LLMProviderConfig(
         provider_name="openai",
         is_active=True,
@@ -15,11 +14,9 @@ def test_create_llm_provider():
     
     assert provider.id is not None
     assert provider.provider_name == "openai"
-    db.close()
 
-def test_add_api_key_to_provider():
-    db = SessionLocal()
-    provider = LLMProviderConfig(provider_name="openai")
+def test_add_api_key_to_provider(db: Session):
+    provider = LLMProviderConfig(provider_name="gemini")  # Use different provider
     db.add(provider)
     db.commit()
     
@@ -34,4 +31,3 @@ def test_add_api_key_to_provider():
     
     assert api_key.id is not None
     assert len(provider.api_keys) == 1
-    db.close()
