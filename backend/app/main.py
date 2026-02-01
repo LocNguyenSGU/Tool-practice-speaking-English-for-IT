@@ -19,7 +19,7 @@ from app.core.exceptions import (
     BadRequestException,
     ConflictException,
 )
-from app.api.v1 import auth, lessons, sentences, audio, practice, users
+from app.api.v1 import auth, lessons, sentences, audio, practice, users, speech_practice
 from app.api.v1.websocket import speech_practice as ws_speech_practice
 
 
@@ -153,6 +153,7 @@ app.include_router(sentences.router, prefix="/api/v1", tags=["Sentences"])
 app.include_router(audio.router, prefix="/api/v1", tags=["Audio"])
 app.include_router(practice.router, prefix="/api/v1", tags=["Practice"])
 app.include_router(users.router, prefix="/api/v1", tags=["Users"])
+app.include_router(speech_practice.router, prefix="/api/v1", tags=["Speech Practice"])
 
 # WebSocket routes
 @app.websocket("/ws/speech-practice")

@@ -35,3 +35,7 @@ class SuccessResponse(BaseModel, Generic[T]):
 class ErrorResponse(BaseModel):
     success: bool = False
     error: dict
+
+
+class MessageResponse(BaseModel):
+    message: str
