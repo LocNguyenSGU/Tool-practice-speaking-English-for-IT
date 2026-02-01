@@ -47,6 +47,10 @@ class Settings(BaseSettings):
     debug: bool = False
     project_name: str = "VI→EN Reflex Trainer API"
     
+    # Celery
+    celery_broker_url: str = "redis://localhost:6379/0"
+    celery_result_backend: str = "redis://localhost:6379/0"
+    
     class Config:
         env_file = ".env"
         case_sensitive = False
