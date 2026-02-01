@@ -1,0 +1,177 @@
+# Docker Compose for Speech Practice Feature
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.speech-practice.yml up
+
+version: '3.8'
+
+services:
+  # Extend existing backend service with speech practice dependencies
+  backend:
+    environment:
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      
+      # LLM API Keys (set in .env)
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      
+      # Whisper
+      WHISPER_MODEL_SIZE: ${WHISPER_MODEL_SIZE:-turbo}
+      WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
+      
+      # S3/MinIO
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      S3_BUCKET_NAME: speech-practice-audio
+      
+      # Encryption
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-your-32-byte-encryption-key-here}
+    volumes:
+      - whisper_models:/app/models/whisper
+    depends_on:
+      - redis
+      - minio
+
+  # Redis for Celery and caching
+  redis:
+    image: redis:7-alpine
+    container_name: vi-en-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # MinIO for audio storage (S3-compatible)
+  minio:
+    image: minio/minio:latest
+    container_name: vi-en-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    restart: unless-stopped
+
+  # Celery Worker - STT (Speech-to-Text)
+  celery_worker_stt:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vi-en-worker-stt
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-vi_en_db}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      WHISPER_MODEL_SIZE: ${WHISPER_MODEL_SIZE:-turbo}
+      WHISPER_DEVICE: ${WHISPER_DEVICE:-cpu}
+    volumes:
+      - ./backend:/app
+      - whisper_models:/app/models/whisper
+    depends_on:
+      - postgres
+      - redis
+    command: celery -A app.core.celery_app worker -Q stt -c 2 --loglevel=info
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+    restart: unless-stopped
+
+  # Celery Worker - Prosody Analysis
+  celery_worker_prosody:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vi-en-worker-prosody
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-vi_en_db}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres
+      - redis
+    command: celery -A app.core.celery_app worker -Q prosody -c 4 --loglevel=info
+    restart: unless-stopped
+
+  # Celery Worker - LLM Analysis
+  celery_worker_llm:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vi-en-worker-llm
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-vi_en_db}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres
+      - redis
+    command: celery -A app.core.celery_app worker -Q llm -c 4 --loglevel=info
+    restart: unless-stopped
+
+  # Celery Beat - Scheduled Tasks
+  celery_beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vi-en-celery-beat
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-vi_en_db}
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - postgres
+      - redis
+    command: celery -A app.core.celery_app beat --loglevel=info
+    restart: unless-stopped
+
+  # Flower - Celery Monitoring Dashboard
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vi-en-flower
+    ports:
+      - "5555:5555"
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    depends_on:
+      - redis
+    command: celery -A app.core.celery_app flower --port=5555
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  minio_data:
+  whisper_models:
